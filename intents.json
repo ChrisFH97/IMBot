@@ -1,0 +1,17 @@
+{
+    "intents": [
+      {
+        "Word" : "ban",
+        "Params" : ["id"]
+      }, 
+      {
+        "Word" : "kick",
+        "Params" : ["id"]
+      }, 
+      {
+        "Word" : "timeout",
+        "Params" : ["id","time"]
+      }
+      
+    ]
+  }

@@ -1,5 +1,7 @@
 const Discord = require('discord.js');
+const funcs = require("./funcs.js");
 const client = new Discord.Client();
+
 var token = require("./donotopen/tokens.json");
 
 client.on('ready', () => {
@@ -7,6 +9,16 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
+
+    if(msg.author.bot) return;
+
+    if(msg.content.toLowerCase().includes("imbot")){
+
+        funcs.listen(msg,client);
+    
+    
+      }
+
 
 });
 
