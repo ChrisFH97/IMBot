@@ -118,7 +118,7 @@ function timeoutUser(word,msg,client){
                     
     var regexp = new RegExp( regex.templates.discordID, ''); 
     var ids = msg.content.match(regexp);
-    var kicks = [];
+    var timeouts = [];
 
     if(ids != null){
   
@@ -126,7 +126,7 @@ function timeoutUser(word,msg,client){
          if(id != "592783579998584868"){
              client.fetchUser(id).then(user => {
                  var member =  msg.guild.members.get(id);
-                 kicks.push(member.displayName);
+                 timeouts.push(member.displayName);
                  if(msg.content.includes("for")){
               //    member.ban({ reason: msg.content.slice(msg.content.indexOf("for"), msg.content.length)}).then(() => console.log(`Banned ${member.displayName}`)).catch(console.error);
                  }else{
@@ -143,11 +143,11 @@ function timeoutUser(word,msg,client){
     
 
      setTimeout(function(){
-        kicks = kicks.toString().replace(/,/g, ' & ');
+        timeouts = timeouts.toString().replace(/,/g, ' & ');
          if(msg.content.includes("for")){
-             msg.channel.send("Hello " + msg.author + ", I see you wish to "+ word + " " + kicks.toString() + ", they are now kicked :wave: :point_right:.\n**Reason**: *" + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "*");  
+             msg.channel.send("Hello " + msg.author + ", I see you wish to "+ word + " " + timeouts.toString() + ", they are now kicked :wave: :point_right:.\n**Reason**: *" + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "*");  
          }else{
-             msg.channel.send("Hello " + msg.author + ", I see you wish to "+ word + " " + kicks.toString() + ", they are now kicked :wave: :point_right:.");
+             msg.channel.send("Hello " + msg.author + ", I see you wish to "+ word + " " + timeouts.toString() + ", they are now kicked :wave: :point_right:.");
          }
 
        
