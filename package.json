@@ -1,0 +1,22 @@
+{
+  "name": "dhweek",
+  "version": "1.0.0",
+  "description": "DHWeek bot submission",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CHAIG200/DHWeekBot.git"
+  },
+  "author": "CHAIG200 & Gisgar3",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CHAIG200/DHWeekBot/issues"
+  },
+  "homepage": "https://github.com/CHAIG200/DHWeekBot#readme",
+  "dependencies": {
+    "discord.js": "^11.5.1"
+  }
+}
