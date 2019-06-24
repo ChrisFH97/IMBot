@@ -116,12 +116,40 @@ function kickUser(word,msg,client){
 
 function timeoutUser(word,msg,client){
                     
-    var regexp = new RegExp( regex.templates.discordID, ''); 
+
+
+    var timer = {
+        hours : [],
+        mintues : [],
+        seconds : []
+    };
+    var timeRegs = regex.templates.time;
+    var regexp = new RegExp( regex.templates.discordID, 'i'); 
     var ids = msg.content.match(regexp);
     var timeouts = [];
 
     if(ids != null){
   
+        
+    timeRegs.forEach(function(reg){
+        var regexp = new RegExp(reg, 'gi'); 
+        var times = msg.content.toLowerCase().match(regexp);
+        if(times !=null){
+            times.forEach(function(time){
+                console.log(time);
+                if(time.includes("h")){
+                    timer.hours.push(time);
+                }else if(time.includes("m")){
+                    timer.mintues.push(time);
+                }else{
+                    timer.seconds.push(time);
+                }
+                
+            })
+        }
+    });
+
+
      ids.forEach(function(id){
          if(id != "592783579998584868"){
              client.fetchUser(id).then(user => {
@@ -144,10 +172,15 @@ function timeoutUser(word,msg,client){
 
      setTimeout(function(){
         timeouts = timeouts.toString().replace(/,/g, ' & ');
+        console.log("Hours: " +  timer.hours);
+        console.log("Minutes: " +  timer.mintues);
+        console.log("Seconds: " +  timer.seconds);
+        console.log(timer.length)
+
          if(msg.content.includes("for")){
-             msg.channel.send("Hello " + msg.author + ", I see you wish to "+ word + " " + timeouts.toString() + ", they are now kicked :wave: :point_right:.\n**Reason**: *" + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "*");  
+             msg.channel.send("Hello " + msg.author + ", I see you wish to "+ word + " " + timeouts.toString() + ", they are now kicked :wave: :point_right:.\n**Length**: *" + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "*");  
          }else{
-             msg.channel.send("Hello " + msg.author + ", I see you wish to "+ word + " " + timeouts.toString() + ", they are now kicked :wave: :point_right:.");
+             msg.channel.send("Hello " + msg.author + ", I see you wish to "+ word + " " + timeouts.toString() + ", But you did not specifiy a length of time .");
          }
 
        
