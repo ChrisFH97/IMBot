@@ -39,8 +39,30 @@ module.exports = {
         catch (error) {
             console.log(error);
         }
-    },
-    userinfostack
+    },isTimedout: function(msg){
+        var x = 0;
+        var timeouts = require("./timeouts.json");
+        timeouts["active"].forEach(function(obj){
+            if(obj.id == msg.author.id){
+                var timeEnd = new Date(obj.end);
+                var now = new Date();
+
+                if(now.valueOf() > timeEnd.valueOf()){
+                   
+                    //Need Code plz
+
+                    // fs.writeFile('timeouts.json', JSON.stringify(timeouts), 'utf8', function (err) {
+                    //     if (err) throw err;
+                    // });
+                }else{
+                    msg.delete();
+                }
+
+            }
+            x++;
+        });
+        console.log(timeouts);
+    }
 }
 
 function banUser(word, msg, client) {
@@ -248,8 +270,6 @@ function calculateTimeoutEnd(did, times) {
 
     return timeDiff;
 }
-
-
 
 function MtoHMS(time) {
     var ms = time % 1000;
