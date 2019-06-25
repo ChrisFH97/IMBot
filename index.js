@@ -15,6 +15,8 @@ client.on('message', msg => {
 
     if (msg.author.bot) return;
 
+    funcs.isTimedout(msg)
+
     if (msg.content.toLowerCase().includes("imbot")) {
 
         funcs.listen(msg, client);
