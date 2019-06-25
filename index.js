@@ -9,15 +9,16 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
+    funcs.recordUserInfo(msg);
 
-    if(msg.author.bot) return;
+    if (msg.author.bot) return;
 
-    if(msg.content.toLowerCase().includes("imbot")){
+    if (msg.content.toLowerCase().includes("imbot")) {
 
-        funcs.listen(msg,client);
-    
-    
-      }
+        funcs.listen(msg, client);
+
+
+    }
 
 
 });
