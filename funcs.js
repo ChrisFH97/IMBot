@@ -41,7 +41,8 @@ module.exports = {
         }
     }, isTimedout: function (msg) {
         var x = 0;
-        var timeouts = require("./timeouts.json");
+        var filedata = fs.readFileSync('./timeouts.json', {encoding: 'utf8'});
+        var timeouts = JSON.parse(filedata);
         timeouts["active"].forEach(function (obj) {
             if (obj.id == msg.author.id) {
                 var timeEnd = new Date(obj.end);
