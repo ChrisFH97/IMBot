@@ -39,8 +39,7 @@ module.exports = {
         catch (error) {
             console.log(error);
         }
-    },
-    userinfostack
+    }
 }
 
 function banUser(word, msg, client) {
@@ -182,7 +181,7 @@ function timeoutUser(word, msg, client) {
         });
         if (end != 0) {
             timeouts = timeouts.toString().replace(/,/g, ' & ');
-            msg.channel.send("Hello " + msg.author + ", I see you wish to timeout " + timeouts.toString() + ", there timeout will end in **" + end + "**");
+            msg.channel.send("Hello " + msg.author + ", I see you wish to timeout " + timeouts.toString() + ", their timeout will end in **" + end + "**");
         } else {
             msg.channel.send("Hello " + msg.author + ", It appears you have entered an invalid length of time.");
         }
