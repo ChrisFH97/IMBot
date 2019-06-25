@@ -29,7 +29,7 @@ module.exports = {
         });
     },
     recordUserInfo : function(msg) {
-        userinfostack.push({name: msg.author.username, id: msg.author.id, msg: msg.content, createdAt: msg.createdAt});
+        userinfostack.push({name: msg.author.username, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt});
         console.log(userinfostack);
     }
 } 
