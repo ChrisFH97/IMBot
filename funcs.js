@@ -39,22 +39,22 @@ module.exports = {
         catch (error) {
             console.log(error);
         }
-    },isTimedout: function(msg){
+    }, isTimedout: function (msg) {
         var x = 0;
-        var timeouts = require("./timeouts.json");
-        timeouts["active"].forEach(function(obj){
-            if(obj.id == msg.author.id){
+        var filedata = fs.readFileSync('./timeouts.json', {encoding: 'utf8'});
+        var timeouts = JSON.parse(filedata);
+        timeouts["active"].forEach(function (obj) {
+            if (obj.id == msg.author.id) {
                 var timeEnd = new Date(obj.end);
                 var now = new Date();
 
-                if(now.valueOf() > timeEnd.valueOf()){
-                   
-                    //Need Code plz
+                if (now.valueOf() > timeEnd.valueOf()) {
+                    timeouts["active"].splice(obj, 1);
 
-                    // fs.writeFile('timeouts.json', JSON.stringify(timeouts), 'utf8', function (err) {
-                    //     if (err) throw err;
-                    // });
-                }else{
+                    fs.writeFileSync('./timeouts.json', JSON.stringify(timeouts), 'utf8', function (err) {
+                        if (err) throw err;
+                    });
+                } else {
                     msg.delete();
                 }
 
