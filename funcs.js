@@ -5,6 +5,7 @@ const config = require("./config.json");
 const fs = require('fs');
 var request = require("request");
 var userinfostack = [];
+var userinfoattachmentstack = [];
 
 module.exports = {
 
@@ -31,8 +32,19 @@ module.exports = {
         });
     },
     recordUserInfo: function (msg) {
-        userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt });
+        if (msg.attachments.size > 0) {
+            for (const value of msg.attachments.array().values()) {
+                userinfoattachmentstack.push({attachments: [{filename: value.filename, url: value.url}]});
+            }
+            userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
+            userinfoattachmentstack = [];
+        }
+        else {
+            userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt });
+        }
+        // TESTING ---------------
         console.log(userinfostack);
+        // TESTING ---------------
     },
     appendUserInfo: function () {
         try {
