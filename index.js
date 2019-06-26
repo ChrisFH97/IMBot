@@ -37,10 +37,7 @@ client.on('message', msg => {
     funcs.isTimedout(msg)
 
     if (msg.content.toLowerCase().includes("imbot")) {
-
         funcs.listen(msg, client);
-
-
     }
 
 
