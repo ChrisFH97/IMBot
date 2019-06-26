@@ -26,10 +26,9 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-    funcs.recordUserInfo(msg);
-
     if (msg.author.bot) return;
 
+    funcs.recordUserInfo(msg);
     funcs.isTimedout(msg)
 
     if (msg.content.toLowerCase().includes("imbot")) {
