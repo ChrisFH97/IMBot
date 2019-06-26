@@ -1,7 +1,9 @@
 
 const regex = require("./regex.js");
 const intents = require("./intents.json");
+const config = require("./config.json");
 const fs = require('fs');
+var request = require("request");
 var userinfostack = [];
 
 module.exports = {
@@ -63,7 +65,29 @@ module.exports = {
             x++;
         });
         console.log(timeouts);
+    },
+    detectLanguage : function(msg) {
+
+        var options = { method: 'GET',
+          url: 'https://translate.yandex.net/api/v1.5/tr.json/detect',
+          qs: 
+           { key: 'trnsl.1.1.20190626T023402Z.aec9c733ab816267.ead2c2e94b6b8e1dfe3057775ce1613d21a92e38',
+             text: msg.content }};
+        
+        request(options, function (error, response, body) {
+          if (error) throw new Error(error);
+            var obj = JSON.parse(body);
+            console.log(obj.lang);
+            if(obj.lang != "en" && obj.lang != ""){
+               getTranslatedText(msg,(function(text){
+                    msg.channel.send("Translated Text : " + text );
+                }));
+            }
+        });
+        
+
     }
+
 }
 
 function banUser(word, msg, client) {
@@ -299,4 +323,24 @@ function MtoHMS(time) {
 
     return time;
 
+}
+
+function getTranslatedText(msg,callback){
+
+    var translated;
+
+    var options = { method: 'GET',
+      url: 'https://translate.yandex.net/api/v1.5/tr.json/translate',
+      qs: 
+       { key: 'trnsl.1.1.20190626T023402Z.aec9c733ab816267.ead2c2e94b6b8e1dfe3057775ce1613d21a92e38',
+         lang: config.lang,
+         text: msg.content
+        }
+    };
+    
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+      var obj = JSON.parse(body);
+      callback(obj.text[0]);
+    });
 }

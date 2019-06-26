@@ -12,6 +12,7 @@ $$$$$$$  |$$ |$$$$$$$  |\$$$$$$$\ \$$$$$$  |$$ |      \$$$$$$$ |      $$ |  $$ |
 const Discord = require('discord.js');
 const funcs = require("./funcs.js");
 const client = new Discord.Client();
+const {Translate} = require('@google-cloud/translate');
 
 var token = require("./donotopen/tokens.json");
 
@@ -23,9 +24,10 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     funcs.recordUserInfo(msg);
-
     if (msg.author.bot) return;
 
+    funcs.detectLanguage(msg);
+    
     funcs.isTimedout(msg)
 
     if (msg.content.toLowerCase().includes("imbot")) {
@@ -34,5 +36,7 @@ client.on('message', msg => {
 
 
 });
+
+
 
 client.login(token.token);
