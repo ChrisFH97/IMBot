@@ -39,9 +39,10 @@ module.exports = {
         catch (error) {
             console.log(error);
         }
-    }, isTimedout: function (msg) {
+    },
+    isTimedout: function (msg) {
         var x = 0;
-        var filedata = fs.readFileSync('./timeouts.json', {encoding: 'utf8'});
+        var filedata = fs.readFileSync('./timeouts.json', { encoding: 'utf8' });
         var timeouts = JSON.parse(filedata);
         timeouts["active"].forEach(function (obj) {
             if (obj.id == msg.author.id) {
