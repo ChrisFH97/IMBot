@@ -27,18 +27,10 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-<<<<<<< HEAD
-    funcs.recordUserInfo(msg);
     if (msg.author.bot) return;
-
-    funcs.detectLanguage(msg);
-    
-=======
-    if (msg.author.bot) return;
-
     funcs.recordUserInfo(msg);
->>>>>>> dbd7efa0a33f7c510bcb0ce374a67abb923b2106
     funcs.isTimedout(msg)
+    funcs.detectLanguage(msg);
 
     if (msg.content.toLowerCase().includes("imbot")) {
         funcs.listen(msg, client);
