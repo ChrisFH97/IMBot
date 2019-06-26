@@ -1,8 +1,11 @@
 
 const regex = require("./regex.js");
 const intents = require("./intents.json");
+const config = require("./config.json");
 const fs = require('fs');
+var request = require("request");
 var userinfostack = [];
+var userinfoattachmentstack = [];
 
 module.exports = {
 
@@ -29,8 +32,19 @@ module.exports = {
         });
     },
     recordUserInfo: function (msg) {
-        userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt });
+        if (msg.attachments.size > 0) {
+            for (const value of msg.attachments.array().values()) {
+                userinfoattachmentstack.push({attachments: [{filename: value.filename, url: value.url}]});
+            }
+            userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
+            userinfoattachmentstack = [];
+        }
+        else {
+            userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt });
+        }
+        // TESTING ---------------
         console.log(userinfostack);
+        // TESTING ---------------
     },
     appendUserInfo: function () {
         try {
@@ -39,9 +53,10 @@ module.exports = {
         catch (error) {
             console.log(error);
         }
-    }, isTimedout: function (msg) {
+    },
+    isTimedout: function (msg) {
         var x = 0;
-        var filedata = fs.readFileSync('./timeouts.json', {encoding: 'utf8'});
+        var filedata = fs.readFileSync('./timeouts.json', { encoding: 'utf8' });
         var timeouts = JSON.parse(filedata);
         timeouts["active"].forEach(function (obj) {
             if (obj.id == msg.author.id) {
@@ -62,7 +77,33 @@ module.exports = {
             x++;
         });
         console.log(timeouts);
+    },
+    detectLanguage: function (msg) {
+
+        var options = {
+            method: 'GET',
+            url: 'https://translate.yandex.net/api/v1.5/tr.json/detect',
+            qs:
+            {
+                key: 'trnsl.1.1.20190626T023402Z.aec9c733ab816267.ead2c2e94b6b8e1dfe3057775ce1613d21a92e38',
+                text: msg.content
+            }
+        };
+
+        request(options, function (error, response, body) {
+            if (error) throw new Error(error);
+            var obj = JSON.parse(body);
+            console.log(obj.lang);
+            if (obj.lang != "en" && obj.lang != "") {
+                getTranslatedText(msg, (function (text) {
+                    msg.channel.send("Translated Text : " + text);
+                }));
+            }
+        });
+
+
     }
+
 }
 
 function banUser(word, msg, client) {
@@ -298,4 +339,30 @@ function MtoHMS(time) {
 
     return time;
 
+}
+
+function getTranslatedText(msg, callback) {
+    var translated;
+
+    if (msg.content == "" && msg.attachments.size > 0) {
+        return;
+    }
+    else {
+        var options = {
+            method: 'GET',
+            url: 'https://translate.yandex.net/api/v1.5/tr.json/translate',
+            qs:
+            {
+                key: 'trnsl.1.1.20190626T023402Z.aec9c733ab816267.ead2c2e94b6b8e1dfe3057775ce1613d21a92e38',
+                lang: config.lang,
+                text: msg.content
+            }
+        };
+
+        request(options, function (error, response, body) {
+            if (error) throw new Error(error);
+            var obj = JSON.parse(body);
+            callback(obj.text[0]);
+        });
+    }
 }

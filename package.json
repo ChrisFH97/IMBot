@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/CHAIG200/DHWeekBot#readme",
   "dependencies": {
+    "@google-cloud/translate": "^4.1.0",
     "discord.js": "^11.5.1",
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "request": "^2.88.0"
   }
 }
