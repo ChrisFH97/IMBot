@@ -442,7 +442,7 @@ function featureToggle(msg, toggleType) {
     } else {
         types.forEach(function (type) {
             if (msg.content.toLowerCase().includes(type)) {
-                var state = toggleType = true ? "Enabled" : "Disabled";
+                var state = toggleType ? "Enabled" : "Disabled";
                 switch (type) {
                     case "translation":
                         configFile["Translation"] = toggleType;
