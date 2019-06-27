@@ -19,7 +19,7 @@ $$$$$$$$\       $$ |$$  /     \$$$$$$  / $$$$$$  |$$  /     $$$$$$\ \$$$$$$  |
 
 Developed by:
 CHAIG200 (ChrisFH#1769)
-Gisgar3 (Gisgar3#3047)
+Gavin Isgar (Gisgar3#3047)
 */
 
 const Discord = require('discord.js');
@@ -29,7 +29,7 @@ const regex = require("./regex.js");
 const readline = require("readline");
 const fs = require('fs');
 var token = require("./donotopen/tokens.json");
-var config;
+var config = require("./config.json");
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -40,13 +40,9 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     if (msg.author.bot) return;
-    var filedata = fs.readFileSync('./config.json', { encoding: 'utf8' });
-    config = JSON.parse(filedata);
+
     funcs.recordUserInfo(msg);
     var timedout = funcs.isTimedout(msg);
-
-
-
 
     if (msg.content.toLowerCase().includes("imbot")) {
         funcs.listen(msg, client, config);
@@ -54,7 +50,7 @@ client.on('message', msg => {
 
     
     /*
-        Section below checks all urls that point directly towads and image and uses a free NSFW Detection API for checking for nsfw content inside an image.
+        Section below checks all urls that point directly towards an image and uses a free NSFW Detection API for checking for NSFW content inside an image.
     */  
 
    if(config["NSFW Filter"] == true){

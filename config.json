@@ -1,8 +1,1 @@
-{
-    "lang": "en",
-    "NSFW Filter": false,
-    "Translation" : false,
-    "Probability Muting" : false,
-    "Statistical Slow-mode" : false,
-    "Word Blacklisting" : false
-}
+{"lang":"en","NSFW Filter":"Enabled ","Translation":"Enabled ","Probability Muting":false,"Statistical Slow-mode":"Enabled ","Word Blacklisting":false}

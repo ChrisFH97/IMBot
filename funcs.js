@@ -31,15 +31,15 @@ module.exports = {
                         break;
 
                     case "enable" || "activate":
-                        featureToggle(msg,true);
-                        break;    
+                        featureToggle(msg, true);
+                        break;
 
                     case "disable" || "deactivate":
-                        featureToggle(msg,false);
+                        featureToggle(msg, false);
                         break;
-                        
+
                     case "turn":
-                        featureToggle(msg,null);
+                        featureToggle(msg, null);
                         break;
                 }
             }
@@ -48,7 +48,7 @@ module.exports = {
     recordUserInfo: function (msg) {
         if (msg.attachments.size > 0) {
             for (const value of msg.attachments.array().values()) {
-                userinfoattachmentstack.push({attachments: [{filename: value.filename, url: value.url}]});
+                userinfoattachmentstack.push({ attachments: [{ filename: value.filename, url: value.url }] });
             }
             userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
             userinfoattachmentstack = [];
@@ -57,7 +57,7 @@ module.exports = {
             userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt });
         }
         // TESTING ---------------
-      //  console.log(userinfostack);
+        // console.log(userinfostack);
         // TESTING ---------------
     },
     appendUserInfo: function () {
@@ -84,7 +84,7 @@ module.exports = {
                         if (err) throw err;
                     });
                 } else {
-                  
+
                     msg.delete();
                 }
 
@@ -96,7 +96,7 @@ module.exports = {
         var filedata = fs.readFileSync('./config.json', { encoding: 'utf8' });
         var config = JSON.parse(filedata);
 
-        if(config["Translation"] == true){
+        if (config["Translation"] == true) {
             var original = msg.content;
             var options = {
                 method: 'GET',
@@ -107,7 +107,7 @@ module.exports = {
                     text: original
                 }
             };
-    
+
             request(options, function (error, response, body) {
                 if (error) throw new Error(error);
                 var obj = JSON.parse(body);
@@ -120,22 +120,22 @@ module.exports = {
                 }
             });
         }
-    }, 
-    isNSFW : function(url,callback){
+    },
+    isNSFW: function (url, callback) {
         var nsfw = false;
 
-        var options = { method: 'GET',url: 'https://api.uploadfilter.io/v1/nudity', qs: { apikey: 'f7827a90-9604-11e9-a4fd-d54073694519', url: url },headers: { 'cache-control': 'no-cache',Host: 'api.uploadfilter.io', Accept: '*/*'} };
+        var options = { method: 'GET', url: 'https://api.uploadfilter.io/v1/nudity', qs: { apikey: 'f7827a90-9604-11e9-a4fd-d54073694519', url: url }, headers: { 'cache-control': 'no-cache', Host: 'api.uploadfilter.io', Accept: '*/*' } };
 
         request(options, function (error, response, body) {
             if (error) throw new Error(error);
 
-            if(response.statusCode == 200){
+            if (response.statusCode == 200) {
                 var obj = JSON.parse(body);
-                if(obj.result.classification == "not safe" || obj.result.classification == "propably not safe"){
+                if (obj.result.classification == "not safe" || obj.result.classification == "propably not safe") {
                     nsfw = true;
                     console.log("High chance of nudity")
                     callback(nsfw)
-                }else{
+                } else {
                     console.log("Image is safe")
                     callback(nsfw)
                 }
@@ -408,68 +408,67 @@ function getTranslatedText(msg, callback) {
     }
 }
 
-function translateEmbed(msg,translation){
+function translateEmbed(msg, translation) {
 
     const exampleEmbed = new Discord.RichEmbed()
 
-.setColor('#0099ff')
-.setAuthor('IMBot Translator', 'https://i.imgur.com/dVbJb3U.png', 'https://github.com/CHAIG200/DHWeekBot')
-.setThumbnail('https://i.imgur.com/dVbJb3U.png')
-.addField('Original Author: ' , msg.author)
-.addField('Original Text: ' , msg.content)
-.addField('Translated Text: ' , translation)
-.setTimestamp()
-.setFooter('IMBot translation', 'https://i.imgur.com/dVbJb3U.png');
+        .setColor('#0099ff')
+        .setAuthor('IMBot Translator', 'https://i.imgur.com/dVbJb3U.png', 'https://github.com/CHAIG200/DHWeekBot')
+        .setThumbnail('https://i.imgur.com/dVbJb3U.png')
+        .addField('Original Author: ', msg.author)
+        .addField('Original Text: ', msg.content)
+        .addField('Translated Text: ', translation)
+        .setTimestamp()
+        .setFooter('IMBot Translation', 'https://i.imgur.com/dVbJb3U.png');
 
-return exampleEmbed;
+    return exampleEmbed;
 
 }
 
-function featureToggle(msg,toggleType){
+function featureToggle(msg, toggleType) {
 
-        var types = ["translation","nsfw","cooldown","blacklisting"]
+    var types = ["translation", "nsfw", "cooldown", "blacklisting"]
 
-        if(msg.content.toLowerCase().includes("off")){
-            toggleType = false;
-        }else if(msg.content.toLowerCase().includes("on")){
-            toggleType = true;
-        }else if(msg.content.toLowerCase().includes("off") && msg.content.toLowerCase().includes("on")){
-            toggleType = null;
-        }
-            
-        if(toggleType == null){
-            msg.channel.send(msg.author + ", It appears you are trying to enabled and disable a feature at the same time ");
-        }else{
-            types.forEach(function(type){
-                if(msg.content.toLowerCase().includes(type)){
-                    var state = toggleType = true ? "Enabled " : "Disabled";
-                    switch(type){
-                        case "translation":
-                        configFile["Translation"] = toggleType;
-                        msg.channel.send(msg.author + ",  The Auto Translation feature has been " + state);
-                        break;
-    
-                        case "nsfw":
-                        configFile["NSFW Filter"] = toggleType;
-                        msg.channel.send(msg.author + ",  The Auto Translation feature has been " + state);
-                        break;
-    
-                        case "cooldown":
-                        configFile["Statistical Slow-mode"] = toggleType;
-                        msg.channel.send(msg.author + ",  The Statistical Slow-mode feature has been " + state);
-                        break;
-    
-                        case "blacklisting":
-                        configFile["Word Blacklisting"] = toggleType;
-                        msg.channel.send(msg.author + ",  The Word Blacklisting feature has been " + state);
-                        break;
-                    }  
-                       
-    
-                        fs.writeFile('./config.json', JSON.stringify(configFile), 'utf8', function (err) {
-                            if (err) throw err;
-                        });
-                   }
-            });
-        }
+    if (msg.content.toLowerCase().includes("off")) {
+        toggleType = false;
+    } else if (msg.content.toLowerCase().includes("on")) {
+        toggleType = true;
+    } else if (msg.content.toLowerCase().includes("off") && msg.content.toLowerCase().includes("on")) {
+        toggleType = null;
     }
+
+    if (toggleType == null) {
+        msg.channel.send(msg.author + ", It appears you are trying to enabled and disable a feature at the same time ");
+    } else {
+        types.forEach(function (type) {
+            if (msg.content.toLowerCase().includes(type)) {
+                var state = toggleType = true ? "Enabled" : "Disabled";
+                switch (type) {
+                    case "translation":
+                        configFile["Translation"] = toggleType;
+                        msg.channel.send(msg.author + ",  the __Auto Translation__ feature has been " + state);
+                        break;
+
+                    case "nsfw":
+                        configFile["NSFW Filter"] = toggleType;
+                        msg.channel.send(msg.author + ",  the __NSFW Filter__ feature has been " + state);
+                        break;
+
+                    case "cooldown":
+                        configFile["Statistical Slow-mode"] = toggleType;
+                        msg.channel.send(msg.author + ",  the __Statistical Slow-Mode__ feature has been " + state);
+                        break;
+
+                    case "blacklisting":
+                        configFile["Word Blacklisting"] = toggleType;
+                        msg.channel.send(msg.author + ",  the __Word Blacklisting__ feature has been " + state);
+                        break;
+                }
+
+                fs.writeFileSync('./config.json', JSON.stringify(configFile), { encoding: "utf8" }, function (err) {
+                    if (err) throw err;
+                });
+            }
+        });
+    }
+}
