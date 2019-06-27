@@ -16,6 +16,12 @@
         "Word" : "disable"
       }, 
       {
+        "Word" : "activate"
+      }, 
+      {
+        "Word" : "deactivate"
+      },  
+      {
         "Word" : "turn"
       }
       
