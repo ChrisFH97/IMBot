@@ -40,7 +40,7 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     if (msg.author.bot) return;
-
+    
     funcs.recordUserInfo(msg);
     var timedout = funcs.isTimedout(msg);
 
