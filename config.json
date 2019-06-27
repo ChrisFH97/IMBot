@@ -1,7 +1,7 @@
 {
     "lang": "en",
-    "NSFW Filter": true,
-    "Translation" : true,
+    "NSFW Filter": false,
+    "Translation" : false,
     "Probability Muting" : false,
     "Statistical Slow-mode" : false,
     "Word Blacklisting" : false

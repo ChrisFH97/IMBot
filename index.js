@@ -40,6 +40,8 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     if (msg.author.bot) return;
+    var filedata = fs.readFileSync('./config.json', { encoding: 'utf8' });
+    config = JSON.parse(filedata);
     funcs.recordUserInfo(msg);
     var timedout = funcs.isTimedout(msg);
 
@@ -47,15 +49,14 @@ client.on('message', msg => {
 
 
     if (msg.content.toLowerCase().includes("imbot")) {
-        funcs.listen(msg, client);
+        funcs.listen(msg, client, config);
     }
 
     
     /*
         Section below checks all urls that point directly towads and image and uses a free NSFW Detection API for checking for nsfw content inside an image.
     */  
-   var filedata = fs.readFileSync('./config.json', { encoding: 'utf8' });
-   config = JSON.parse(filedata);
+
    if(config["NSFW Filter"] == true){
     var regexp = new RegExp(regex.templates.url[0], 'gi');
     var images = msg.content.match(regexp);

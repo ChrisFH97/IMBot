@@ -4,13 +4,15 @@ const intents = require("./intents.json");
 const config = require("./config.json");
 const fs = require('fs');
 var request = require("request");
+
 var userinfostack = [];
 var userinfoattachmentstack = [];
+var configFile;
 
 module.exports = {
 
-    listen: function (msg, client) {
-
+    listen: function (msg, client, configF) {
+        configFile = configF;
         var arr = (intents.intents);
         arr.forEach(function (intent) {
             var word = intent.Word;
@@ -140,54 +142,10 @@ module.exports = {
             }
         });
     },
-    featureToggle : function(msg,toggleType){
-
-        var types = ["translation","nsfw","cooldown","blacklisting"]
-        var config = JSON.parse(fs.readFileSync('./config.json'));
-
-        if(msg.content.toLowerCase().includes("off")){
-            toggleType = false;
-        }else if(msg.content.toLowerCase().includes("on")){
-            toggleType = true;
-        }
-
-        types.forEach(function(type){
-            if(msg.content.toLowerCase().includes(type)){
-                var state = toggleType = true ? "Enabled " : "Disabled";
-                switch(type){
-                    case "translation":
-                    config["Translation"] = toggleType;
-                    msg.channel.send(msg.author + ",  The Auto Translation feature has been " + state);
-                    break;
-
-                    case "nsfw":
-                    config["NSFW Filter"] = toggleType;
-                    msg.channel.send(msg.author + ",  The Auto Translation feature has been " + state);
-                    break;
-
-                    case "cooldown":
-                    config["Statistical Slow-mode"] = toggleType;
-                    msg.channel.send(msg.author + ",  The Statistical Slow-mode feature has been " + state);
-                    break;
-
-                    case "blacklisting":
-                    config["Word Blacklisting"] = toggleType;
-                    msg.channel.send(msg.author + ",  The Word Blacklisting feature has been " + state);
-                    break;
-                }
-            }
-        });
-
-        var newConfig = JSON.stringify(config);
-
-        fs.writeFile('./config.json', newConfig, 'utf8', function (err) {
-            if (err) throw err;
-        });
-
-    },
 
     userinfostack
 }
+
 
 function banUser(word, msg, client) {
 
@@ -450,7 +408,7 @@ function getTranslatedText(msg, callback) {
     }
 }
 
- function translateEmbed(msg,translation){
+function translateEmbed(msg,translation){
 
     const exampleEmbed = new Discord.RichEmbed()
 
@@ -466,3 +424,52 @@ function getTranslatedText(msg, callback) {
 return exampleEmbed;
 
 }
+
+function featureToggle(msg,toggleType){
+
+        var types = ["translation","nsfw","cooldown","blacklisting"]
+
+        if(msg.content.toLowerCase().includes("off")){
+            toggleType = false;
+        }else if(msg.content.toLowerCase().includes("on")){
+            toggleType = true;
+        }else if(msg.content.toLowerCase().includes("off") && msg.content.toLowerCase().includes("on")){
+            toggleType = null;
+        }
+            
+        if(toggleType == null){
+            msg.channel.send(msg.author + ", It appears you are trying to enabled and disable a feature at the same time ");
+        }else{
+            types.forEach(function(type){
+                if(msg.content.toLowerCase().includes(type)){
+                    var state = toggleType = true ? "Enabled " : "Disabled";
+                    switch(type){
+                        case "translation":
+                        configFile["Translation"] = toggleType;
+                        msg.channel.send(msg.author + ",  The Auto Translation feature has been " + state);
+                        break;
+    
+                        case "nsfw":
+                        configFile["NSFW Filter"] = toggleType;
+                        msg.channel.send(msg.author + ",  The Auto Translation feature has been " + state);
+                        break;
+    
+                        case "cooldown":
+                        configFile["Statistical Slow-mode"] = toggleType;
+                        msg.channel.send(msg.author + ",  The Statistical Slow-mode feature has been " + state);
+                        break;
+    
+                        case "blacklisting":
+                        configFile["Word Blacklisting"] = toggleType;
+                        msg.channel.send(msg.author + ",  The Word Blacklisting feature has been " + state);
+                        break;
+                    }  
+                       
+    
+                        fs.writeFile('./config.json', JSON.stringify(configFile), 'utf8', function (err) {
+                            if (err) throw err;
+                        });
+                   }
+            });
+        }
+    }
