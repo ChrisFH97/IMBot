@@ -101,6 +101,29 @@ module.exports = {
             }
         });
     },
+
+    isNSFW : function(url,callback){
+        var nsfw = false;
+
+        var options = { method: 'GET',url: 'https://api.uploadfilter.io/v1/nudity', qs: { apikey: 'f7827a90-9604-11e9-a4fd-d54073694519', url: url },headers: { 'cache-control': 'no-cache',Host: 'api.uploadfilter.io', Accept: '*/*'} };
+
+        request(options, function (error, response, body) {
+            if (error) throw new Error(error);
+
+            if(response.statusCode == 200){
+                var obj = JSON.parse(body);
+                if(obj.result.classification == "not safe" || obj.result.classification == "propably not safe"){
+                    nsfw = true;
+                    console.log("High chance of nudity")
+                    callback(nsfw)
+                }else{
+                    console.log("Image is safe")
+                    callback(nsfw)
+                }
+            }
+        });
+    },
+
     userinfostack
 }
 

@@ -1,3 +1,8 @@
 {
-    "lang": "en"
+    "lang": "en",
+    "NSFW Filter": true,
+    "Translation" : false,
+    "Probability Muting" : false,
+    "Statistical Slow-mode" : false,
+    "Word Blacklisting" : false
 }
