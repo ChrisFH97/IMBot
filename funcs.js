@@ -276,5 +276,112 @@ function MtoHMS(time) {
     }
 
     return time;
+}
 
+function getTranslatedText(msg, callback) {
+    var translated;
+
+    if (msg.content == "" && msg.attachments.size > 0) {
+        return;
+    }
+    else {
+        var options = {
+            method: 'GET',
+            url: 'https://translate.yandex.net/api/v1.5/tr.json/translate',
+            qs:
+            {
+                key: 'trnsl.1.1.20190626T023402Z.aec9c733ab816267.ead2c2e94b6b8e1dfe3057775ce1613d21a92e38',
+                lang: config.lang,
+                text: msg.content
+            }
+        };
+
+        request(options, function (error, response, body) {
+            if (error) throw new Error(error);
+            var obj = JSON.parse(body);
+            callback(obj.text[0]);
+        });
+    }
+}
+
+function translateEmbed(msg, translation) {
+    const embed = new Discord.RichEmbed()
+        .setColor('#0099ff')
+        .setAuthor('IMBot Translator', './IMBOTLOGO1-TILE.png', 'https://github.com/CHAIG200/DHWeekBot')
+        .setThumbnail('./IMBOTLOGO1-BADGE-BIG.png')
+        .addField('Original Author: ', msg.author)
+        .addField('Original Text: ', msg.content)
+        .addField('Translated Text: ', translation)
+        .setTimestamp()
+        .setFooter('IMBot Translation', './IMBOTLOGO1-TILE.png');
+    return embed;
+}
+
+function featureToggle(msg, toggleType) {
+
+    var types = ["translation", "nsfw", "cooldown", "blacklisting"]
+
+    if (msg.content.toLowerCase().includes("off")) {
+        toggleType = false;
+    } else if (msg.content.toLowerCase().includes("on")) {
+        toggleType = true;
+    } else if (msg.content.toLowerCase().includes("off") && msg.content.toLowerCase().includes("on")) {
+        toggleType = null;
+    }
+
+    if (toggleType == null) {
+        msg.channel.send(msg.author + ", It appears you are trying to enabled and disable a feature at the same time ");
+    } else {
+        types.forEach(function (type) {
+            if (msg.content.toLowerCase().includes(type)) {
+                var state = toggleType = true ? "Enabled" : "Disabled";
+                switch (type) {
+                    case "translation":
+                        configFile["Translation"] = toggleType;
+                        msg.channel.send(msg.author + ",  the __Auto Translation__ feature has been " + state);
+                        break;
+
+                    case "nsfw":
+                        configFile["NSFW Filter"] = toggleType;
+                        msg.channel.send(msg.author + ",  the __NSFW Filter__ feature has been " + state);
+                        break;
+
+                    case "cooldown":
+                        configFile["Statistical Slow-mode"] = toggleType;
+                        msg.channel.send(msg.author + ",  the __Statistical Slow-Mode__ feature has been " + state);
+                        break;
+
+                    case "blacklisting":
+                        configFile["Word Blacklisting"] = toggleType;
+                        msg.channel.send(msg.author + ",  the __Word Blacklisting__ feature has been " + state);
+                        break;
+                }
+
+                fs.writeFileSync('./config.json', JSON.stringify(configFile), { encoding: "utf8" }, function (err) {
+                    if (err) throw err;
+                });
+            }
+        });
+    }
+}
+
+function purgeChannel(msg, client) {
+    if (msg.mentions.members.array()[0].user.id == client.id) {
+        if (msg.mentions.members.array()[1].exists()) {
+            var userid = msg.mentions.members.array()[1].user.id;
+            msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
+                if (message.author.id == userid) {
+                    message.delete();
+                }
+            }));
+        }
+    }
+    else {
+        var userid = msg.mentions.members.array()[0].user.id;
+            msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
+                if (message.author.id == userid) {
+                    message.delete();
+                }
+            }));
+    }
 }
