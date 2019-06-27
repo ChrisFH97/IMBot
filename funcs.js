@@ -100,10 +100,8 @@ module.exports = {
                 }));
             }
         });
-
-
-    }
-
+    },
+    userinfostack
 }
 
 function banUser(word, msg, client) {
