@@ -41,6 +41,10 @@ module.exports = {
                     case "turn":
                         featureToggle(msg, null);
                         break;
+
+                    case "purge":
+                        purgeChannel(msg, client)
+                        break;
                 }
             }
         });
@@ -154,7 +158,6 @@ function banUser(word, msg, client) {
     var bans = [];
 
     if (ids != null) {
-
         ids.forEach(function (id) {
             if (id != "592783579998584868") {
                 client.fetchUser(id).then(user => {
@@ -165,13 +168,9 @@ function banUser(word, msg, client) {
                     } else {
                         //    member.ban().then(() => console.log(`Banned ${member.displayName}`)).catch(console.error);
                     }
-
                     member.send("You have been banned from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "");
-
                 });
             }
-
-
         });
 
 
@@ -470,5 +469,26 @@ function featureToggle(msg, toggleType) {
                 });
             }
         });
+    }
+}
+
+function purgeChannel(msg, client) {
+    if (msg.mentions.members.array()[0].user.id == client.id) {
+        if (msg.mentions.members.array()[1].exists()) {
+            var userid = msg.mentions.members.array()[1].user.id;
+            msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
+                if (message.author.id == userid) {
+                    message.delete();
+                }
+            }));
+        }
+    }
+    else {
+        var userid = msg.mentions.members.array()[0].user.id;
+            msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
+                if (message.author.id == userid) {
+                    message.delete();
+                }
+            }));
     }
 }
