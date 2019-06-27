@@ -79,32 +79,33 @@ module.exports = {
         return isTimedout;
     },
     detectLanguage: function (msg) {
-        var original = msg.content;
-        var options = {
-            method: 'GET',
-            url: 'https://translate.yandex.net/api/v1.5/tr.json/detect',
-            qs:
-            {
-                key: 'trnsl.1.1.20190626T023402Z.aec9c733ab816267.ead2c2e94b6b8e1dfe3057775ce1613d21a92e38',
-                text: original
-            }
-        };
+        var filedata = fs.readFileSync('./config.json', { encoding: 'utf8' });
+        var config = JSON.parse(filedata);
 
-        request(options, function (error, response, body) {
-            if (error) throw new Error(error);
-            var obj = JSON.parse(body);
-            console.log(obj.lang);
-            if (obj.lang != "en" && obj.lang != "") {
-                getTranslatedText(msg, (function (text) {
-                    msg.channel.send(translateEmbed(msg, text));
-                    msg.delete();
-                }));
-            }
-        });
-
-
-
-
+        if(config["Translation"] == true){
+            var original = msg.content;
+            var options = {
+                method: 'GET',
+                url: 'https://translate.yandex.net/api/v1.5/tr.json/detect',
+                qs:
+                {
+                    key: 'trnsl.1.1.20190626T023402Z.aec9c733ab816267.ead2c2e94b6b8e1dfe3057775ce1613d21a92e38',
+                    text: original
+                }
+            };
+    
+            request(options, function (error, response, body) {
+                if (error) throw new Error(error);
+                var obj = JSON.parse(body);
+                console.log(obj.lang);
+                if (obj.lang != "en" && obj.lang != "") {
+                    getTranslatedText(msg, (function (text) {
+                        msg.channel.send(translateEmbed(msg, text));
+                        msg.delete();
+                    }));
+                }
+            });
+        }
     }, 
     isNSFW : function(url,callback){
         var nsfw = false;
@@ -398,12 +399,13 @@ function getTranslatedText(msg, callback) {
     const exampleEmbed = new Discord.RichEmbed()
 
 .setColor('#0099ff')
-.setAuthor('IMBot Translator', 'https://github.com/CHAIG200/DHWeekBot/blob/master/assets/IMBOTLOGO1-WITHDESC.png', 'https://github.com/CHAIG200/DHWeekBot')
-.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+.setAuthor('IMBot Translator', 'https://i.imgur.com/dVbJb3U.png', 'https://github.com/CHAIG200/DHWeekBot')
+.setThumbnail('https://i.imgur.com/dVbJb3U.png')
+.addField('Original Author: ' , msg.author)
 .addField('Original Text: ' , msg.content)
 .addField('Translated Text: ' , translation)
 .setTimestamp()
-.setFooter('IMBot translation', 'https://github.com/CHAIG200/DHWeekBot/blob/master/assets/IMBOTLOGO1-WITHDESC.png');
+.setFooter('IMBot translation', 'https://i.imgur.com/dVbJb3U.png');
 
 return exampleEmbed;
 

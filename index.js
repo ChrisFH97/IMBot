@@ -50,18 +50,17 @@ client.on('message', msg => {
         funcs.listen(msg, client);
     }
 
-    var regexp = new RegExp(regex.templates.url[0], 'gi');
-    var images = msg.content.match(regexp);
     
     /*
         Section below checks all urls that point directly towads and image and uses a free NSFW Detection API for checking for nsfw content inside an image.
     */  
    var filedata = fs.readFileSync('./config.json', { encoding: 'utf8' });
    config = JSON.parse(filedata);
+   if(config["NSFW Filter"] == true){
+    var regexp = new RegExp(regex.templates.url[0], 'gi');
+    var images = msg.content.match(regexp);
    if(images != null){
-    if(config["NSFW Filter"] == true){
-        console.log("Image; " +(images))
-        
+   
             images.forEach(function(url){
              if( funcs.isNSFW(url,(function(nsfw){
                if(nsfw == true){
@@ -74,6 +73,10 @@ client.on('message', msg => {
                }
               }))){}
             });
+          }else{
+            if(timedout == false){
+                funcs.detectLanguage(msg);
+            }
           }
     }else{
         if(timedout == false){
