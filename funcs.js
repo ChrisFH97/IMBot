@@ -1,4 +1,4 @@
-
+const Discord = require('discord.js');
 const regex = require("./regex.js");
 const intents = require("./intents.json");
 const config = require("./config.json");
@@ -43,7 +43,7 @@ module.exports = {
             userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt });
         }
         // TESTING ---------------
-        console.log(userinfostack);
+      //  console.log(userinfostack);
         // TESTING ---------------
     },
     appendUserInfo: function () {
@@ -55,14 +55,14 @@ module.exports = {
         }
     },
     isTimedout: function (msg) {
-        var x = 0;
+        var isTimedout = false;
         var filedata = fs.readFileSync('./timeouts.json', { encoding: 'utf8' });
         var timeouts = JSON.parse(filedata);
         timeouts["active"].forEach(function (obj) {
             if (obj.id == msg.author.id) {
                 var timeEnd = new Date(obj.end);
                 var now = new Date();
-
+                isTimedout = true;
                 if (now.valueOf() > timeEnd.valueOf()) {
                     timeouts["active"].splice(obj, 1);
 
@@ -70,23 +70,23 @@ module.exports = {
                         if (err) throw err;
                     });
                 } else {
+                  
                     msg.delete();
                 }
 
             }
-            x++;
         });
-        console.log(timeouts);
+        return isTimedout;
     },
     detectLanguage: function (msg) {
-
+        var original = msg.content;
         var options = {
             method: 'GET',
             url: 'https://translate.yandex.net/api/v1.5/tr.json/detect',
             qs:
             {
                 key: 'trnsl.1.1.20190626T023402Z.aec9c733ab816267.ead2c2e94b6b8e1dfe3057775ce1613d21a92e38',
-                text: msg.content
+                text: original
             }
         };
 
@@ -96,12 +96,16 @@ module.exports = {
             console.log(obj.lang);
             if (obj.lang != "en" && obj.lang != "") {
                 getTranslatedText(msg, (function (text) {
-                    msg.channel.send("Translated Text : " + text);
+                    msg.channel.send(translateEmbed(msg, text));
+                    msg.delete();
                 }));
             }
         });
-    },
 
+
+
+
+    }, 
     isNSFW : function(url,callback){
         var nsfw = false;
 
@@ -386,4 +390,21 @@ function getTranslatedText(msg, callback) {
             callback(obj.text[0]);
         });
     }
+}
+
+
+ function translateEmbed(msg,translation){
+
+    const exampleEmbed = new Discord.RichEmbed()
+
+.setColor('#0099ff')
+.setAuthor('IMBot Translator', 'https://github.com/CHAIG200/DHWeekBot/blob/master/assets/IMBOTLOGO1-WITHDESC.png', 'https://github.com/CHAIG200/DHWeekBot')
+.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+.addField('Original Text: ' , msg.content)
+.addField('Translated Text: ' , translation)
+.setTimestamp()
+.setFooter('IMBot translation', 'https://github.com/CHAIG200/DHWeekBot/blob/master/assets/IMBOTLOGO1-WITHDESC.png');
+
+return exampleEmbed;
+
 }

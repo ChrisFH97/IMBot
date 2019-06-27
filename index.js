@@ -41,7 +41,7 @@ client.on('ready', () => {
 client.on('message', msg => {
     if (msg.author.bot) return;
     funcs.recordUserInfo(msg);
-    funcs.isTimedout(msg)
+    var timedout = funcs.isTimedout(msg);
 
 
 
@@ -68,13 +68,18 @@ client.on('message', msg => {
                  msg.channel.send(msg.author + ", You are not allowed to post NSFW Content");
                  msg.delete().then(msg => console.log(`Deleted message from ${msg.author.username} fro NSFW Content`)).catch(console.error); 
                }else{
-                funcs.detectLanguage(msg);
+                if(timedout == false){
+                    funcs.detectLanguage(msg);
+                }
                }
               }))){}
             });
           }
     }else{
-        funcs.detectLanguage(msg);
+        if(timedout == false){
+            funcs.detectLanguage(msg);
+        }
+
     }
 
 
