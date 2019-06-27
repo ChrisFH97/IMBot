@@ -4,11 +4,11 @@
 # Why rely on intention?
 With an intent-system, users are not required to remember any specific syntax to allow the bot to function (**i.e.** a command prefix). For example, if a moderator on a server wants to ban a user, they can type:  
 ```
-IMBOT please ban @Gisgar3#3047 for staff disrespect
+IMBOT please ban ChrisFH#1769 for staff disrespect
 ```
 or
 ```
-IMBOT plzz baann @Gisgar3#3047 for being a poopoo hed
+IMBOT Can you ban the user @Gisgar3#3047 for being a poopoo hed
 ```
 Both solutions will equally work, as the intent-system was primarily developed to understand numerous forms of speech.
 # What else can IMBOT do?
