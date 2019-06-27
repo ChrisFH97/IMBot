@@ -27,6 +27,18 @@ module.exports = {
                     case "timeout":
                         timeoutUser(word, msg, client);
                         break;
+
+                    case "enable":
+                        
+                        break;    
+
+                    case "disable":
+                    
+                        break;
+                        
+                    case "turn":
+
+                        break;
                 }
             }
         });
