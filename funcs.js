@@ -529,22 +529,30 @@ function featureToggle(msg, toggleType) {
 }
 
 function purgeChannel(msg, client) {
-    if (msg.mentions.members.array()[0].user.id == client.id) {
-        if (msg.mentions.members.array()[1].exists()) {
-            var userid = msg.mentions.members.array()[1].user.id;
+    if (msg.mentions.channels.size > 0) {
+        var channelId = msg.mentions.channels.array()[0].id;
+        client.guilds.get(msg.guild.id).channels.get(channelId).fetchMessages().then(messages => messages.array().forEach(message => {
+            message.delete();
+        }));
+    }
+    else if (msg.mentions.members.size > 0) {
+        if (msg.mentions.members.array()[0].user.id == client.id) {
+            if (msg.mentions.members.array()[1].exists()) {
+                var userid = msg.mentions.members.array()[1].user.id;
+                msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
+                    if (message.author.id == userid) {
+                        message.delete();
+                    }
+                }));
+            }
+        }
+        else {
+            var userid = msg.mentions.members.array()[0].user.id;
             msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
                 if (message.author.id == userid) {
                     message.delete();
                 }
             }));
         }
-    }
-    else {
-        var userid = msg.mentions.members.array()[0].user.id;
-        msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
-            if (message.author.id == userid) {
-                message.delete();
-            }
-        }));
     }
 }
