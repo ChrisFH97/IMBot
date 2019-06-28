@@ -510,7 +510,7 @@ function featureToggle(msg, toggleType) {
                         break;
 
                     case "cooldown":
-                        configFile["Statistical Slow-mode"] = toggleType;
+                        configFile["Statistical Slow-Mode"] = toggleType;
                         msg.channel.send(msg.author + ",  the __Statistical Slow-Mode__ feature has been " + state);
                         break;
 
