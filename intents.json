@@ -1,16 +1,31 @@
 {
     "intents": [
       {
-        "Word" : "ban",
-        "Params" : ["id"]
+        "Word" : "ban"
       }, 
       {
-        "Word" : "kick",
-        "Params" : ["id"]
+        "Word" : "kick"
       }, 
       {
-        "Word" : "timeout",
-        "Params" : ["id","time"]
+        "Word" : "timeout"
+      }, 
+      {
+        "Word" : "enable"
+      }, 
+      {
+        "Word" : "disable"
+      }, 
+      {
+        "Word" : "activate"
+      }, 
+      {
+        "Word" : "deactivate"
+      },  
+      {
+        "Word" : "turn"
+      },
+      {
+        "Word": "purge"
       }
       
     ]
