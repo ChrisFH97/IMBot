@@ -147,7 +147,6 @@ module.exports = {
         });
     },
     userinfostack
-    }
 }
 
 function banUser(word, msg, client) {
@@ -345,9 +344,6 @@ function calculateTimeoutEnd(did, times) {
         });
     }
 
-
-
-
     return timeDiff;
 }
 
@@ -408,13 +404,13 @@ function getTranslatedText(msg, callback) {
 function translateEmbed(msg, translation) {
     const embed = new Discord.RichEmbed()
         .setColor('#0099ff')
-        .setAuthor('IMBot Translator', './IMBOTLOGO1-TILE.png', 'https://github.com/CHAIG200/DHWeekBot')
-        .setThumbnail('./IMBOTLOGO1-BADGE-BIG.png')
+        .setAuthor('IMBot Translator', 'https://raw.githubusercontent.com/CHAIG200/DHWeekBot/master/assets/IMBOTLOGO1-TILE.png?token=AF4X5G3NQWKGZFMT3X5ZT5K5D2MRM', 'https://github.com/CHAIG200/DHWeekBot')
+        .setThumbnail('https://raw.githubusercontent.com/CHAIG200/DHWeekBot/master/assets/IMBOTLOGO1-BADGE-SMALL.png?token=AF4X5G6ZFAJJITL7RX43CNC5D2MUG')
         .addField('Original Author: ', msg.author)
         .addField('Original Text: ', msg.content)
         .addField('Translated Text: ', translation)
         .setTimestamp()
-        .setFooter('IMBot Translation', './IMBOTLOGO1-TILE.png');
+        .setFooter('IMBot Translation', 'https://raw.githubusercontent.com/CHAIG200/DHWeekBot/master/assets/IMBOTLOGO1-TILE.png?token=AF4X5G3NQWKGZFMT3X5ZT5K5D2MRM');
     return embed;
 }
 
@@ -435,7 +431,7 @@ function featureToggle(msg, toggleType) {
     } else {
         types.forEach(function (type) {
             if (msg.content.toLowerCase().includes(type)) {
-                var state = toggleType = true ? "Enabled" : "Disabled";
+                var state = toggleType = true ? "Enabled." : "Disabled.";
                 switch (type) {
                     case "translation":
                         configFile["Translation"] = toggleType;
@@ -448,11 +444,15 @@ function featureToggle(msg, toggleType) {
                         break;
 
                     case "cooldown":
-                        configFile["Statistical Slow-mode"] = toggleType;
+                        configFile["Statistical Slow-Mode"] = toggleType;
                         msg.channel.send(msg.author + ",  the __Statistical Slow-Mode__ feature has been " + state);
                         break;
-
+                }
+            }
+        });
+    }
 }
+
 
 function getTranslatedText(msg, callback) {
     var translated;
@@ -480,23 +480,6 @@ function getTranslatedText(msg, callback) {
     }
 }
 
-function translateEmbed(msg, translation) {
-
-    const exampleEmbed = new Discord.RichEmbed()
-
-        .setColor('#0099ff')
-        .setAuthor('IMBot Translator', 'https://i.imgur.com/dVbJb3U.png', 'https://github.com/CHAIG200/DHWeekBot')
-        .setThumbnail('https://i.imgur.com/dVbJb3U.png')
-        .addField('Original Author: ', msg.author)
-        .addField('Original Text: ', msg.content)
-        .addField('Translated Text: ', translation)
-        .setTimestamp()
-        .setFooter('IMBot Translation', 'https://i.imgur.com/dVbJb3U.png');
-
-    return exampleEmbed;
-
-}
-
 function featureToggle(msg, toggleType) {
 
     var types = ["translation", "nsfw", "cooldown", "blacklisting"]
@@ -514,7 +497,7 @@ function featureToggle(msg, toggleType) {
     } else {
         types.forEach(function (type) {
             if (msg.content.toLowerCase().includes(type)) {
-                var state = toggleType ? "Enabled" : "Disabled";
+                var state = toggleType ? "Enabled." : "Disabled.";
                 switch (type) {
                     case "translation":
                         configFile["Translation"] = toggleType;
@@ -558,10 +541,10 @@ function purgeChannel(msg, client) {
     }
     else {
         var userid = msg.mentions.members.array()[0].user.id;
-            msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
-                if (message.author.id == userid) {
-                    message.delete();
-                }
-            }));
+        msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
+            if (message.author.id == userid) {
+                message.delete();
+            }
+        }));
     }
 }

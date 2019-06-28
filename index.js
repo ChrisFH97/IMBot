@@ -40,7 +40,7 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     if (msg.author.bot) return;
-    
+
     funcs.recordUserInfo(msg);
     var timedout = funcs.isTimedout(msg);
 
@@ -48,35 +48,32 @@ client.on('message', msg => {
         funcs.listen(msg, client, config);
     }
 
-    
-    /*
-        Section below checks all urls that point directly towards an image and uses a free NSFW Detection API for checking for NSFW content inside an image.
-    */  
 
-   if(config["NSFW Filter"] == true){
-    var regexp = new RegExp(regex.templates.url[0], 'gi');
-    var images = msg.content.match(regexp);
-   if(images != null){
-   
-            images.forEach(function(url){
-             if( funcs.isNSFW(url,(function(nsfw){
-               if(nsfw == true){
-                 msg.channel.send(msg.author + ", You are not allowed to post NSFW Content");
-                 msg.delete().then(msg => console.log(`Deleted message from ${msg.author.username} fro NSFW Content`)).catch(console.error); 
-               }else{
-                if(timedout == false){
-                    funcs.detectLanguage(msg);
-                }
-               }
-              }))){}
+    // Section below checks all urls that point directly towards an image and uses a free NSFW Detection API for checking for NSFW content inside an image.
+    if (config["NSFW Filter"] == true) {
+        var regexp = new RegExp(regex.templates.url[0], 'gi');
+        var images = msg.content.match(regexp);
+        if (images != null) {
+
+            images.forEach(function (url) {
+                if (funcs.isNSFW(url, (function (nsfw) {
+                    if (nsfw == true) {
+                        msg.channel.send(msg.author + ", You are not allowed to post NSFW Content");
+                        msg.delete().then(msg => console.log(`Deleted message from ${msg.author.username} fro NSFW Content`)).catch(console.error);
+                    } else {
+                        if (timedout == false) {
+                            funcs.detectLanguage(msg);
+                        }
+                    }
+                }))) { }
             });
-          }else{
-            if(timedout == false){
+        } else {
+            if (timedout == false) {
                 funcs.detectLanguage(msg);
             }
-          }
-    }else{
-        if(timedout == false){
+        }
+    } else {
+        if (timedout == false) {
             funcs.detectLanguage(msg);
         }
 
