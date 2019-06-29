@@ -34,14 +34,14 @@ var config = require("./config.json");
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
-    setInterval(funcs.appendUserInfo, 300000);
+    setInterval(funcs.appendUserInfo, 5000);
 
 });
 
 client.on('message', msg => {
     if (msg.author.bot) return;
 
-    funcs.recordUserInfo(msg);
+    funcs.recordUserInfo(msg, msg.guild);
     var timedout = funcs.isTimedout(msg);
 
     if (msg.content.toLowerCase().includes("imbot")) {

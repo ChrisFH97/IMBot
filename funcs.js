@@ -22,63 +22,66 @@ module.exports = {
             }
         });
 
-        if(count > 1){
-            msg.channel.send(msg.author + ", Please only use single intent per message.")
-        }else if(count == 1){
+        if (count > 1) {
+            msg.channel.send(msg.author + ", please only use single intent per message.")
+        } else if (count == 1) {
             arr.forEach(function (intent) {
                 var word = intent.Word;
                 if (msg.content.toLowerCase().includes(word)) {
                     switch (word) {
                         case "ban":
-                            if(hasPermission(msg.member,"BAN_MEMBERS")){
+                            if (hasPermission(msg.member, "BAN_MEMBERS")) {
                                 banUser(word, msg, client);
                             }
                             break;
-    
+
                         case "kick":
-                            if(hasPermission(msg.member,"KICK_MEMBERS")){
+                            if (hasPermission(msg.member, "KICK_MEMBERS")) {
                                 kickUser(word, msg, client);
                             }
                             break;
-    
+
                         case "timeout":
-                        
-                            if(hasPermission(msg.member,"MANAGE_MESSAGES")){
+
+                            if (hasPermission(msg.member, "MANAGE_MESSAGES")) {
                                 timeoutUser(word, msg, client);
                             }
                             break;
-    
+
                         case "enable" || "activate":
-                            if(hasPermission(msg.member,"ADMINISTRATOR")){
+                            if (hasPermission(msg.member, "ADMINISTRATOR")) {
                                 var type = true;
                                 featureToggle(msg, type);
                             }
                             break;
-    
+
                         case "disable" || "deactivate":
-                            
-                            if(hasPermission(msg.member,"ADMINISTRATOR")){
+
+                            if (hasPermission(msg.member, "ADMINISTRATOR")) {
                                 var type = false;
                                 featureToggle(msg, type);
                             }
                             break;
-    
+
                         case "turn":
-                            if(hasPermission(msg.member,"ADMINISTRATOR")){
+                            if (hasPermission(msg.member, "ADMINISTRATOR")) {
                                 featureToggle(msg, null);
                             }
                             break;
-    
+
                         case "purge":
-                            if(hasPermission(msg.member,"MANAGE_MESSAGES")){
+                            if (hasPermission(msg.member, "MANAGE_MESSAGES")) {
                                 purgeChannel(msg, client);
                             }
                             break;
 
                         case "role":
-                            if(hasPermission(msg.member,"MANAGE_ROLES")){
+                            if (hasPermission(msg.member, "MANAGE_ROLES")) {
                                 roleAlteration(msg, client);
                             }
+                            break;
+                        case "stats":
+                            showUserStats(msg, client);
                             break;
                     }
                 }
@@ -86,17 +89,18 @@ module.exports = {
         }
 
     },
-    recordUserInfo: function (msg) {
+    recordUserInfo: function (msg, guild) {
         if (msg.attachments.size > 0) {
             for (const value of msg.attachments.array().values()) {
                 userinfoattachmentstack.push({ attachments: [{ filename: value.filename, url: value.url }] });
             }
-            userinfostack.push({ name: msg.author.username, channel: msg.channel.id, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
+            userinfostack.push({ name: msg.author.username, userId: msg.author.id, channelName: msg.channel.name, channelId: msg.channel.id, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
             userinfoattachmentstack = [];
         }
         else {
-            userinfostack.push({ name: msg.author.username, channel: msg.channel.id, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt });
+            userinfostack.push({ name: msg.author.username, userId: msg.author.id, channelName: msg.channel.name, channelId: msg.channel.id, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt });
         }
+
     },
     appendUserInfo: function () {
         try {
@@ -177,33 +181,33 @@ module.exports = {
                 }
             }
         });
-    },statSlowmode : function(){
-        statSlowmode();
+    }, statSlowMode: function () {
+
     },
     userinfostack
 }
 
 function banUser(word, msg, client) {
 
-    var ids = msg.mentions.users; 
+    var ids = msg.mentions.users;
     var bans = [];
     var splitter;
     if (ids != null) {
 
-        ids.forEach(function(user){
+        ids.forEach(function (user) {
             if (user.id != "592783579998584868") {
                 var member = msg.guild.members.get(user.id);
                 bans.push(member.toString());
                 if (msg.content.toLowerCase().includes("for") || msg.content.toLowerCase().includes("because")) {
-                     splitter = msg.content.toLowerCase().includes("for") ? "for" : "because";
+                    splitter = msg.content.toLowerCase().includes("for") ? "for" : "because";
                     //    member.ban({ reason: msg.content.slice(msg.content.indexOf("for"), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
                     member.send("You have been banned from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.toLowerCase().slice(msg.content.toLowerCase.indexOf(splitter), msg.content.length) + ".");
                 } else {
                     //    member.ban().then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
                     member.send("You have been banned from **" + client.guilds.get(msg.guild.id).name + "**.");
                 }
-               
-         }
+
+            }
         });
 
 
@@ -227,24 +231,24 @@ function banUser(word, msg, client) {
 function kickUser(word, msg, client) {
 
 
-    var ids = msg.mentions.users; 
+    var ids = msg.mentions.users;
     var splitter;
     var kicks = [];
 
     if (ids != null) {
 
-        ids.forEach(function(user){
+        ids.forEach(function (user) {
             if (user.id != "592783579998584868") {
 
                 var member = msg.guild.members.get(user.id);
                 kicks.push(member.toString());
                 if (msg.content.toLowerCase().includes("for") || msg.content.toLowerCase().includes("because")) {
-                     splitter = msg.content.toLowerCase().includes("for") ? "for" : "because";
+                    splitter = msg.content.toLowerCase().includes("for") ? "for" : "because";
                     //    member.ban({ reason: msg.content.slice(msg.content.toLowerCase().indexOf(splitter), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
                     member.send("You have been kicked from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.toLowerCase().slice(msg.content.indexOf(splitter), msg.content.length) + "");
                 } else {
                     //    member.ban().then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
-                    member.send("You have been kicked from **" + client.guilds.get(msg.guild.id).name + "**." );
+                    member.send("You have been kicked from **" + client.guilds.get(msg.guild.id).name + "**.");
                 }
 
             }
@@ -275,7 +279,7 @@ function timeoutUser(word, msg, client) {
         seconds: []
     };
 
-    var ids = msg.mentions.users; 
+    var ids = msg.mentions.users;
 
     var timeouts = [];
 
@@ -284,7 +288,7 @@ function timeoutUser(word, msg, client) {
     if (ids != null) {
 
         var timeRegs = regex.templates.time;
-        
+
         timeRegs.forEach(function (reg) {
             var regexp = new RegExp(reg, 'gi');
             var times = msg.content.toLowerCase().match(regexp);
@@ -304,9 +308,9 @@ function timeoutUser(word, msg, client) {
             }
         });
 
-        ids.forEach(function(user){
+        ids.forEach(function (user) {
             if (user.id != "592783579998584868") {
-                if(isTimedout(user.id) == false){
+                if (isTimedout(user.id) == false) {
                     end = calculateTimeoutEnd(user.id, timer);
                     if (end != 0) {
                         var member = msg.guild.members.get(user.id);
@@ -450,7 +454,7 @@ function translateEmbed(msg, translation) {
 }
 
 function featureToggle(msg, toggleType) {
-    
+
     var types = ["translation", "nsfw", "cooldown", "blacklisting"]
 
     if (msg.content.toLowerCase().includes(" off ")) {
@@ -469,10 +473,10 @@ function featureToggle(msg, toggleType) {
         types.forEach(function (type) {
             if (msg.content.toLowerCase().includes(type)) {
                 var state;
-                if(toggleType){
-                     state = "Enabled.";
-                }else{
-                     state = "Disabled.";
+                if (toggleType) {
+                    state = "Enabled.";
+                } else {
+                    state = "Disabled.";
                 }
 
                 switch (type) {
@@ -552,42 +556,61 @@ function hasPermission(member, permission) {
     return member.hasPermission(permission) ? true : false;
 }
 
-function roleAlteration(msg){
+function roleAlteration(msg) {
 
     var people = [];
     var type = "";
     var roleName = "";
 
-    var userlist = msg.mentions.users; 
-    userlist.forEach(function(user){
+    var userlist = msg.mentions.users;
+    userlist.forEach(function (user) {
         if (user.id != "592783579998584868") {
 
             var member = msg.guild.members.get(user.id);
             people.push(member.toString());
             var hasRole = false;
             msg.guild.roles.find(role => {
-                if(hasRole == false && msg.content.toLowerCase().includes(role.name.toLowerCase())){
+                if (hasRole == false && msg.content.toLowerCase().includes(role.name.toLowerCase())) {
                     hasRole = true;
                     roleName = role.name;
-                    if(msg.content.toLowerCase().includes("give") || msg.content.toLowerCase().includes("assign") || msg.content.toLowerCase().includes("allocate")){
+                    if (msg.content.toLowerCase().includes("give") || msg.content.toLowerCase().includes("assign") || msg.content.toLowerCase().includes("allocate")) {
                         type = "given"
                         member.addRole(role).catch(console.error);
-                    }else if(msg.content.toLowerCase().includes("remove") || msg.content.toLowerCase().includes("take")){
+                    } else if (msg.content.toLowerCase().includes("remove") || msg.content.toLowerCase().includes("take")) {
                         type = "removed"
                         member.removeRole(role).catch(console.error);
                     }
                 }
-            } );
+            });
         }
     });
 
-    if(people.size != 0){
+    if (people.size != 0) {
         people = people.toString().replace(/,/g, ' & ');
-        if(type == "given"){
+        if (type == "given") {
             msg.channel.send("The following user(s) " + people + " have been given the role of " + roleName + ".");
-        }else if(type == "removed"){
+        } else if (type == "removed") {
             msg.channel.send("The following user(s) " + people + " no longer have the role " + roleName + ".");
         }
-        
+
     }
+}
+
+function showUserStats(msg, client) {
+    var embed;
+    for (var data of userinfostack) {
+        if (data.userId == msg.author.id) {
+            var count = Object.keys(data).length;
+            embed = new Discord.RichEmbed()
+                .setColor('#0099ff')
+                .setAuthor('IMBot User Statistics', 'https://raw.githubusercontent.com/CHAIG200/DHWeekBot/master/assets/IMBOTLOGO1-TILE.png?token=AF4X5G3NQWKGZFMT3X5ZT5K5D2MRM', 'https://github.com/CHAIG200/DHWeekBot')
+                .setThumbnail('https://raw.githubusercontent.com/CHAIG200/DHWeekBot/master/assets/IMBOTLOGO1-BADGE-SMALL.png?token=AF4X5G6ZFAJJITL7RX43CNC5D2MUG')
+                .addField('Total Recorded Messages: ', count)
+                .addField('User-ID: ', msg.author.id)
+                .setTimestamp()
+                .setFooter('IMBot User Statistics', 'https://raw.githubusercontent.com/CHAIG200/DHWeekBot/master/assets/IMBOTLOGO1-TILE.png?token=AF4X5G3NQWKGZFMT3X5ZT5K5D2MRM');
+
+        }
+    }
+    msg.channel.send(embed);
 }
