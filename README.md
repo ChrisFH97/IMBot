@@ -1,6 +1,6 @@
 <img src="./assets/IMBOTLOGO1-WITHDESC.png"></img>
 
-<p align="center"><a href="https://discordapp.com/api/oauth2/authorize?client_id=592783579998584868&permissions=8&scope=bot"><img src="./assets/IMBOTINVITE1.png"></img></a></p>
+<p align="center"><a href="https://discordapp.com/api/oauth2/authorize?client_id=592783579998584868&permissions=8&scope=bot"><img style="width:480px;" src="./assets/IMBOTINVITE1.png"></img></a></p>
 
 **IMBot** is a Discord server moderation bot that functions by detecting the intentions of a user using the bot. The developed intent-system is capable of comprehending commands in many different ways.
 # Why rely on intention?
@@ -23,6 +23,13 @@ Since we do not have our Wiki page up with all documentation, we are displaying 
 |BAN_MEMBERS|
 ```
 IMBot please ban @Gisgar3#3047 for being disrespectful towards users
+```
+## Unban Users
+|Required Permission|
+|:-----------------:|
+|BAN_MEMBERS|
+```
+IMBot please unban Gisgar3
 ```
 ## Kick Users
 |Required Permission|
@@ -50,8 +57,6 @@ me gusta beber la leche
 
 // Will return a RichEmbed() with translation information
 ```
-## Intent-System
-**Bot is capable of comprehending numerous ways of speech to function as intended**
 ## Purge Channels/Users
 **Can be used to remove mass amounts of messages from channels or users.**  
 
@@ -69,3 +74,6 @@ IMBot purge @Gisgar3#3047
 ```
 IMBot give @ChrisFH#1769 the Admin role
 ```
+
+## Intent-System
+**Bot is capable of comprehending numerous ways of speech to function as intended**
