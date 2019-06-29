@@ -10,7 +10,8 @@ var userinfoattachmentstack = [];
 var configFile;
 
 module.exports = {
-
+    //Checks if any intents have been used and launches the corrisponding function. and limits it to 1 intent per 
+    //message
     listen: function (msg, client, configF) {
         configFile = configF;
         var arr = (intents.intents);
@@ -18,7 +19,7 @@ module.exports = {
         arr.forEach(function (intent) {
             var word = intent.Word;
             if (msg.content.toLowerCase().includes(" " + word + " ")) {
-                console.log("word " + word + " is used." );
+
                 count++;
             }
         });
@@ -101,6 +102,7 @@ module.exports = {
 
     },
     recordUserInfo: function (msg) {
+          //for storing user data.
         if (msg.attachments.size > 0) {
             for (const value of msg.attachments.array().values()) {
                 userinfoattachmentstack.push({ attachments: [{ filename: value.filename, url: value.url }] });
@@ -113,6 +115,7 @@ module.exports = {
         }
     },
     appendUserInfo: function () {
+        //for storing user data.
         try {
             fs.writeFileSync("./userdatastack.json", JSON.stringify(userinfostack), { encoding: "utf8" });
         }
@@ -121,6 +124,7 @@ module.exports = {
         }
     },
     isTimedout: function (msg) {
+        //This is used to timeout a user if they are not already timedout.
         var isTimedout = false;
         var filedata = fs.readFileSync('./timeouts.json', { encoding: 'utf8' });
         var timeouts = JSON.parse(filedata);
@@ -145,6 +149,7 @@ module.exports = {
         return isTimedout;
     },
     detectLanguage: function (msg) {
+        //detects the language in the message that has been typed. if different it will translate it and display it
         var filedata = fs.readFileSync('./config.json', { encoding: 'utf8' });
         var config = JSON.parse(filedata);
 
@@ -174,6 +179,7 @@ module.exports = {
         }
     },
     isNSFW: function (url, callback) {
+        //Checks if any images are nsfw.
         var nsfw = false;
 
         var options = { method: 'GET', url: 'https://api.uploadfilter.io/v1/nudity', qs: { apikey: 'f7827a90-9604-11e9-a4fd-d54073694519', url: url }, headers: { 'cache-control': 'no-cache', Host: 'api.uploadfilter.io', Accept: '*/*' } };
@@ -193,11 +199,15 @@ module.exports = {
             }
         });
     },statSlowmode : function(){
-        statSlowmode();
+        //Not working
+        //statSlowmode();
     },
     userinfostack
 }
 
+/* 
+This function bans a user when the "ban" intent has been used.
+*/
 function banUser(word, msg, client) {
     var count = 0;
     var ids = msg.mentions.users; 
@@ -211,10 +221,10 @@ function banUser(word, msg, client) {
                 bans.push(member.toString());
                 if (msg.content.toLowerCase().includes("for") || msg.content.toLowerCase().includes("because")) {
                      splitter = msg.content.toLowerCase().includes("for") ? "for" : "because";
-                    //    member.ban({ reason: msg.content.slice(msg.content.indexOf("for"), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                       member.ban({ reason: msg.content.slice(msg.content.indexOf("for"), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
                     member.send("You have been banned from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.toLowerCase().slice(msg.content.toLowerCase.indexOf(splitter), msg.content.length) + ".");
                 } else {
-                    //    member.ban().then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                       member.ban().then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
                     member.send("You have been banned from **" + client.guilds.get(msg.guild.id).name + "**.");
                 }
                count++;
@@ -239,6 +249,9 @@ function banUser(word, msg, client) {
 
 }
 
+/*
+This function unbans a user when the "unban" intent has been used.
+*/
 function unbanUser(msg, client) {
 
     client.guilds.get(msg.guild.id).fetchBans().then(bans => {
@@ -253,7 +266,9 @@ function unbanUser(msg, client) {
 
 }
 
-
+/*
+This function is used to kick a user when the "kick" intent is used and finds any users that have been mentioned.
+*/
 function kickUser(word, msg, client) {
 
     var count = 0;
@@ -270,10 +285,10 @@ function kickUser(word, msg, client) {
                 kicks.push(member.toString());
                 if (msg.content.toLowerCase().includes("for") || msg.content.toLowerCase().includes("because")) {
                      splitter = msg.content.toLowerCase().includes("for") ? "for" : "because";
-                    //    member.ban({ reason: msg.content.slice(msg.content.toLowerCase().indexOf(splitter), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                       member.ban({ reason: msg.content.slice(msg.content.toLowerCase().indexOf(splitter), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
                     member.send("You have been kicked from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.toLowerCase().slice(msg.content.toLowerCase().indexOf(splitter), msg.content.length) + "");
                 } else {
-                    //    member.ban().then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                       member.ban().then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
                     member.send("You have been kicked from **" + client.guilds.get(msg.guild.id).name + "**." );
                 }
                 count++;
@@ -296,6 +311,11 @@ function kickUser(word, msg, client) {
     }
 
 }
+
+/*
+This function times out a user the the intent "timeout" is called and also grabs any times that is found by the 
+time regex array
+*/
 
 function timeoutUser(word, msg, client) {
     var timer = {
@@ -357,6 +377,10 @@ function timeoutUser(word, msg, client) {
     }
 }
 
+/*
+This function is used to calculate the time in milleseconds between two date objects so that it can be broken down
+to get the days, hours , minutes and seconds.
+*/
 function calculateTimeoutEnd(did, times) {
     var now = new Date();
     var duc = 0;
@@ -412,6 +436,11 @@ function calculateTimeoutEnd(did, times) {
     return timeDiff;
 }
 
+/*
+This function is used to determin the time difference between 2 date objects, this is used in conjunction with
+the timeout function.
+*/
+
 function MtoHMS(time) {
     var ms = time % 1000;
     time = (time - ms) / 1000;
@@ -439,7 +468,9 @@ function MtoHMS(time) {
 
     return time;
 }
-
+/*
+This function is used to get the text that is translated using the Yandex api.
+*/
 function getTranslatedText(msg, callback) {
     var translated;
 
@@ -466,6 +497,9 @@ function getTranslatedText(msg, callback) {
     }
 }
 
+/* 
+This function is used to display the text that is translated using the Yandex api.
+*/
 function translateEmbed(msg, translation) {
     const embed = new Discord.RichEmbed()
         .setColor('#0099ff')
@@ -479,9 +513,14 @@ function translateEmbed(msg, translation) {
     return embed;
 }
 
+/* 
+This function is use to enable and disable functions inside the config file.
+*/
 function featureToggle(msg, toggleType) {
     
     var types = ["translation", "nsfw", "cooldown", "blacklisting"]
+
+    //Detects if the user has said "turn off" or "turn on"
 
     if (msg.content.toLowerCase().includes(" off ")) {
         toggleType = false;
@@ -496,6 +535,7 @@ function featureToggle(msg, toggleType) {
     if (toggleType == null) {
         msg.channel.send(msg.author + ", it appears you are trying to enabled and disable a feature at the same time.");
     } else {
+        //Enables or disables the feature that was specified.
         types.forEach(function (type) {
             if (msg.content.toLowerCase().includes(type)) {
                 var state;
@@ -535,6 +575,9 @@ function featureToggle(msg, toggleType) {
     }
 }
 
+/*
+This functions purpose is to purge all messages by a specific user or text channel
+*/
 function purgeChannel(msg, client) {
     if (msg.mentions.channels.size > 0) {
         msg.mentions.channels.forEach((function (channel) {
@@ -564,6 +607,9 @@ function purgeChannel(msg, client) {
     }
 }
 
+/*
+This function checks the timeouts json file and detects if the user has an existing timeout.
+*/
 function isTimedout(id) {
     var isTimedout = false;
     var filedata = fs.readFileSync('./timeouts.json', { encoding: 'utf8' });
@@ -578,24 +624,32 @@ function isTimedout(id) {
     return isTimedout;
 }
 
+/* 
+This function is used to check if user as a set permission.
+*/
 function hasPermission(member, permission) {
     return member.hasPermission(permission) ? true : false;
 }
 
+/*
+ This function is used to allow users to add and remove roles from the users that have been mentioned.
+*/
 function roleAlteration(msg){
 
     var people = [];
     var type = "";
     var roleName = "";
     var count = 0;
-
     var userlist = msg.mentions.users; 
+
+    //Loops through all users mentioned
     userlist.forEach(function(user){
         if (user.id != "592783579998584868") {
-
             var member = msg.guild.members.get(user.id);
             people.push(member.toString());
             var hasRole = false;
+
+            //Checks if any of the roles that are valid have been mentioned and assigns them
             msg.guild.roles.find(role => {
                 if(hasRole == false && msg.content.toLowerCase().includes(role.name.toLowerCase())){
                     hasRole = true;
@@ -614,6 +668,7 @@ function roleAlteration(msg){
         }
     });
 
+    //If any alterations have been made it will alert the author.
     if(count > 0){
         if(people.size != 0){
             people = people.toString().replace(/,/g, ' & ');
@@ -628,12 +683,18 @@ function roleAlteration(msg){
 
 }
 
+/*
+Function sets the langauge that the user has chosen, this is used in conjunction with the translation function
+so that any text that is not in the same language as the servers default will be translated.
+*/
 function setLanguage(msg){
 
     var filedata = fs.readFileSync('./lang.json', { encoding: 'utf8' });
     var langs = JSON.parse(filedata);
     var language = "";
     var set = false;
+
+    //Loops through all languages to check if any have been mentioned.
 
     langs.forEach((function(lang){
         if(set == false && msg.content.toLowerCase().includes(lang.name.toLowerCase())){
@@ -643,6 +704,8 @@ function setLanguage(msg){
           
         }
     }));
+
+    //Sets the language in the config file and notifies the author.
     if(set == true){
         msg.channel.send(msg.author + ", The server's language has been set to " + language + ".");
 

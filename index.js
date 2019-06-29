@@ -33,11 +33,13 @@ var config = require("./config.json");
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
-
+    //Stores the users messages every 5 minutes will be used for future features.
     setInterval(funcs.appendUserInfo, 300000);
 
 });
 
+//Checks if the user is timedout, if the bot is called with a specific action and also if features such as the nsfw filer
+//has been activated.
 client.on('message', msg => {
     if (msg.author.bot) return;
 
@@ -99,5 +101,5 @@ rl.on("line", function (input) {
 });
 
 
-
+//Client login.
 client.login(token.token);

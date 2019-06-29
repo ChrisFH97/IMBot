@@ -1,4 +1,4 @@
-
+//Regex list
 module.exports = { 
     templates : {
 
