@@ -172,6 +172,7 @@ module.exports = {
                     nsfw = true;
                     callback(nsfw)
                 } else {
+
                     callback(nsfw)
                 }
             }
@@ -186,19 +187,22 @@ function banUser(word, msg, client) {
 
     var ids = msg.mentions.users; 
     var bans = [];
-
+    var splitter;
     if (ids != null) {
 
         ids.forEach(function(user){
             if (user.id != "592783579998584868") {
                 var member = msg.guild.members.get(user.id);
                 bans.push(member.toString());
-                if (msg.content.includes("for")) {
+                if (msg.content.toLowerCase().includes("for") || msg.content.toLowerCase().includes("because")) {
+                     splitter = msg.content.toLowerCase().includes("for") ? "for" : "because";
                     //    member.ban({ reason: msg.content.slice(msg.content.indexOf("for"), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                    member.send("You have been banned from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.toLowerCase().slice(msg.content.toLowerCase.indexOf(splitter), msg.content.length) + ".");
                 } else {
                     //    member.ban().then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                    member.send("You have been banned from **" + client.guilds.get(msg.guild.id).name + "**.");
                 }
-                member.send("You have been banned from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "");
+               
          }
         });
 
@@ -206,8 +210,9 @@ function banUser(word, msg, client) {
 
         setTimeout(function () {
             bans = bans.toString().replace(/,/g, ' & ');
-            if (msg.content.includes("for")) {
-                msg.channel.send("Hello " + msg.author + ", I see you wish to " + word + " " + bans.toString() + ", they are now banned :wave: :point_right:.\n**Reason**: *" + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "*");
+            if (msg.content.toLowerCase().includes("for") || msg.content.toLowerCase().includes("because")) {
+                var splitter = msg.content.toLowerCase().includes("for") ? "for" : "because";
+                msg.channel.send("Hello " + msg.author + ", I see you wish to " + word + " " + bans.toString() + ", they are now banned :wave: :point_right:.\n**Reason**: *" + msg.content.toLowerCase().slice(msg.content.indexOf(splitter), msg.content.length) + "*");
             } else {
                 msg.channel.send("Hello " + msg.author + ", I see you wish to " + word + " " + bans.toString() + ", they are now banned :wave: :point_right:.");
             }
@@ -223,7 +228,7 @@ function kickUser(word, msg, client) {
 
 
     var ids = msg.mentions.users; 
-
+    var splitter;
     var kicks = [];
 
     if (ids != null) {
@@ -233,13 +238,14 @@ function kickUser(word, msg, client) {
 
                 var member = msg.guild.members.get(user.id);
                 kicks.push(member.toString());
-                if (msg.content.includes("for")) {
-                    //    member.ban({ reason: msg.content.slice(msg.content.indexOf("for"), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                if (msg.content.toLowerCase().includes("for") || msg.content.toLowerCase().includes("because")) {
+                     splitter = msg.content.toLowerCase().includes("for") ? "for" : "because";
+                    //    member.ban({ reason: msg.content.slice(msg.content.toLowerCase().indexOf(splitter), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                    member.send("You have been kicked from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.toLowerCase().slice(msg.content.indexOf(splitter), msg.content.length) + "");
                 } else {
                     //    member.ban().then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                    member.send("You have been kicked from **" + client.guilds.get(msg.guild.id).name + "**." );
                 }
-
-                member.send("You have been kicked from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "");
 
             }
         });
@@ -248,8 +254,8 @@ function kickUser(word, msg, client) {
 
         setTimeout(function () {
             kicks = kicks.toString().replace(/,/g, ' & ');
-            if (msg.content.includes("for")) {
-                msg.channel.send("Hello " + msg.author + ", I see you wish to " + word + " " + kicks.toString() + ", they are now kicked :wave: :point_right:.\n**Reason**: *" + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "*");
+            if (msg.content.toLowerCase().includes(splitter)) {
+                msg.channel.send("Hello " + msg.author + ", I see you wish to " + word + " " + kicks.toString() + ", they are now kicked :wave: :point_right:.\n**Reason**: *" + msg.content.slice(msg.content.toLowerCase().indexOf(splitter), msg.content.length) + "*");
             } else {
                 msg.channel.send("Hello " + msg.author + ", I see you wish to " + word + " " + kicks.toString() + ", they are now kicked :wave: :point_right:.");
             }
