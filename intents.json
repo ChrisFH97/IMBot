@@ -4,6 +4,9 @@
         "Word" : "ban"
       }, 
       {
+        "Word" : "unban"
+      },
+      {
         "Word" : "kick"
       }, 
       {
@@ -29,6 +32,9 @@
       },
       {
         "Word": "role"
+      },
+      {
+        "Word": "language"
       }
       
     ]
