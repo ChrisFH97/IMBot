@@ -450,16 +450,16 @@ function featureToggle(msg, toggleType) {
     }
 
     if (toggleType == null) {
-        msg.channel.send(msg.author + ", It appears you are trying to enabled and disable a feature at the same time ");
+        msg.channel.send(msg.author + ", it appears you are trying to enabled and disable a feature at the same time.");
     } else {
         types.forEach(function (type) {
             if (msg.content.toLowerCase().includes(type)) {
                 var state;
                 console.log(toggleType);
                 if(toggleType){
-                     state = "Enabled";
+                     state = "Enabled.";
                 }else{
-                     state = "Disabled";
+                     state = "Disabled.";
                 }
 
                 switch (type) {
