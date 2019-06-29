@@ -91,7 +91,7 @@ module.exports = {
             for (const value of msg.attachments.array().values()) {
                 userinfoattachmentstack.push({ attachments: [{ filename: value.filename, url: value.url }] });
             }
-            userinfostack.push({ name: msg.author.username,channel: msg.channel.id, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
+            userinfostack.push({ name: msg.author.username, channel: msg.channel.id, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
             userinfoattachmentstack = [];
         }
         else {
@@ -311,7 +311,7 @@ function timeoutUser(word, msg, client) {
                     if (end != 0) {
                         var member = msg.guild.members.get(user.id);
                         timeouts.push(member.toString());
-                        member.send("You have been timed out from **" + client.guilds.get(msg.guild.id).name + "**, you will be able to chat again in **" + end + "**");
+                        member.send("You have been timed out from **" + client.guilds.get(msg.guild.id).name + "**. You will be able to chat again in **" + end + "**.");
                     }
                 }
             }
@@ -459,7 +459,7 @@ function featureToggle(msg, toggleType) {
         toggleType = true;
     } else if (msg.content.toLowerCase().includes(" off ") && msg.content.toLowerCase().includes(" on ")) {
         toggleType = null;
-    }else{
+    } else {
         toggleType = toggleType;
     }
 
@@ -507,13 +507,13 @@ function featureToggle(msg, toggleType) {
 
 function purgeChannel(msg, client) {
     if (msg.mentions.channels.size > 0) {
-        msg.mentions.channels.forEach((function(channel){
+        msg.mentions.channels.forEach((function (channel) {
             var channelId = channel.id;
             client.guilds.get(msg.guild.id).channels.get(channelId).fetchMessages().then(messages => messages.array().forEach(message => {
                 message.delete();
             }));
         }));
-    }else if (msg.mentions.members.size > 0) {
+    } else if (msg.mentions.members.size > 0) {
         if (msg.mentions.members.array()[0].user.id == client.id) {
             if (msg.mentions.members.array()[1].exists()) {
                 var userid = msg.mentions.members.array()[1].user.id;
@@ -523,7 +523,7 @@ function purgeChannel(msg, client) {
                     }
                 }));
             }
-        }else {
+        } else {
             var userid = msg.mentions.members.array()[0].user.id;
             msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
                 if (message.author.id == userid) {
@@ -532,12 +532,9 @@ function purgeChannel(msg, client) {
             }));
         }
     }
-
-    msg.channel.send(msg.author + ", Now purging");
-
 }
 
-function isTimedout(id){
+function isTimedout(id) {
     var isTimedout = false;
     var filedata = fs.readFileSync('./timeouts.json', { encoding: 'utf8' });
     var timeouts = JSON.parse(filedata);
@@ -551,7 +548,7 @@ function isTimedout(id){
     return isTimedout;
 }
 
-function hasPermission(member,permission){
+function hasPermission(member, permission) {
     return member.hasPermission(permission) ? true : false;
 }
 
@@ -583,7 +580,6 @@ function roleAlteration(msg){
             } );
         }
     });
-
 
     if(people.size != 0){
         people = people.toString().replace(/,/g, ' & ');
