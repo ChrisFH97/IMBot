@@ -19,49 +19,49 @@ module.exports = {
             if (msg.content.toLowerCase().includes(word)) {
                 switch (word) {
                     case "ban":
-                        if(hasPermission(msg.member,"BAN_MEMBERS")){
+                        if (hasPermission(msg.member, "BAN_MEMBERS")) {
                             banUser(word, msg, client);
                         }
                         break;
 
                     case "kick":
-                        if(hasPermission(msg.member,"KICK_MEMBERS")){
+                        if (hasPermission(msg.member, "KICK_MEMBERS")) {
                             kickUser(word, msg, client);
                         }
                         break;
 
                     case "timeout":
-                    
-                        if(hasPermission(msg.member,"MANAGE_MESSAGES")){
+
+                        if (hasPermission(msg.member, "MANAGE_MESSAGES")) {
                             timeoutUser(word, msg, client);
                         }
                         break;
 
                     case "enable" || "activate":
-                        if(hasPermission(msg.member,"ADMINISTRATOR")){
+                        if (hasPermission(msg.member, "ADMINISTRATOR")) {
                             var type = true;
                             featureToggle(msg, type);
                         }
                         break;
 
                     case "disable" || "deactivate":
-                        
-                        if(hasPermission(msg.member,"ADMINISTRATOR")){
+
+                        if (hasPermission(msg.member, "ADMINISTRATOR")) {
                             var type = false;
                             featureToggle(msg, type);
                         }
                         break;
 
                     case "turn":
-                        if(hasPermission(msg.member,"ADMINISTRATOR")){
+                        if (hasPermission(msg.member, "ADMINISTRATOR")) {
                             featureToggle(msg, null);
                         }
                         break;
 
                     case "purge":
-                        if(hasPermission(msg.member,"MANAGE_MESSAGES")){
+                        if (hasPermission(msg.member, "MANAGE_MESSAGES")) {
                             purgeChannel(msg, client);
-                            
+
                         }
                         break;
                 }
@@ -73,7 +73,7 @@ module.exports = {
             for (const value of msg.attachments.array().values()) {
                 userinfoattachmentstack.push({ attachments: [{ filename: value.filename, url: value.url }] });
             }
-            userinfostack.push({ name: msg.author.username,channel: msg.channel.id, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
+            userinfostack.push({ name: msg.author.username, channel: msg.channel.id, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
             userinfoattachmentstack = [];
         }
         else {
@@ -290,7 +290,7 @@ function timeoutUser(word, msg, client) {
 
         ids.forEach(function (id) {
             if (id != "592783579998584868") {
-                if(isTimedout(id) == false){
+                if (isTimedout(id) == false) {
                     end = calculateTimeoutEnd(id, timer);
                     if (end != 0) {
                         var member = msg.guild.members.get(id);
@@ -445,7 +445,7 @@ function featureToggle(msg, toggleType) {
         toggleType = true;
     } else if (msg.content.toLowerCase().includes(" off ") && msg.content.toLowerCase().includes(" on ")) {
         toggleType = null;
-    }else{
+    } else {
         toggleType = toggleType;
     }
 
@@ -456,10 +456,10 @@ function featureToggle(msg, toggleType) {
             if (msg.content.toLowerCase().includes(type)) {
                 var state;
                 console.log(toggleType);
-                if(toggleType){
-                     state = "Enabled.";
-                }else{
-                     state = "Disabled.";
+                if (toggleType) {
+                    state = "Enabled.";
+                } else {
+                    state = "Disabled.";
                 }
 
                 switch (type) {
@@ -495,13 +495,13 @@ function featureToggle(msg, toggleType) {
 
 function purgeChannel(msg, client) {
     if (msg.mentions.channels.size > 0) {
-        msg.mentions.channels.forEach((function(channel){
+        msg.mentions.channels.forEach((function (channel) {
             var channelId = channel.id;
             client.guilds.get(msg.guild.id).channels.get(channelId).fetchMessages().then(messages => messages.array().forEach(message => {
                 message.delete();
             }));
         }));
-    }else if (msg.mentions.members.size > 0) {
+    } else if (msg.mentions.members.size > 0) {
         if (msg.mentions.members.array()[0].user.id == client.id) {
             if (msg.mentions.members.array()[1].exists()) {
                 var userid = msg.mentions.members.array()[1].user.id;
@@ -511,7 +511,7 @@ function purgeChannel(msg, client) {
                     }
                 }));
             }
-        }else {
+        } else {
             var userid = msg.mentions.members.array()[0].user.id;
             msg.channel.fetchMessages().then(messages => messages.array().forEach(message => {
                 if (message.author.id == userid) {
@@ -520,12 +520,9 @@ function purgeChannel(msg, client) {
             }));
         }
     }
-
-    msg.channel.send(msg.author + ", Now purging");
-
 }
 
-function isTimedout(id){
+function isTimedout(id) {
     var isTimedout = false;
     var filedata = fs.readFileSync('./timeouts.json', { encoding: 'utf8' });
     var timeouts = JSON.parse(filedata);
@@ -539,10 +536,10 @@ function isTimedout(id){
     return isTimedout;
 }
 
-function hasPermission(member,permission){
+function hasPermission(member, permission) {
     return member.hasPermission(permission) ? true : false;
 }
 
-function statSlowmode(){
+function statSlowmode() {
 
 }
