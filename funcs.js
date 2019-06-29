@@ -245,7 +245,6 @@ function unbanUser(msg, client) {
         bans.forEach(user => {
             if(msg.content.toLowerCase().includes(user.username.toLowerCase())){
                 msg.guild.unban(user);
-                //user.send('You have been unbanned from ' + client.guilds.get(msg.guild.id).name + "");
                 msg.channel.send(msg.author + ", The user known as  " + user.tag + " has been unbanned");
             }
             
@@ -615,7 +614,6 @@ function roleAlteration(msg){
         }
     });
 
-<<<<<<< HEAD
     if(count > 0){
         if(people.size != 0){
             people = people.toString().replace(/,/g, ' & ');
@@ -625,14 +623,6 @@ function roleAlteration(msg){
                 msg.channel.send("The following user(s) " + people + " no longer have the role " + roleName + ".");
             }
             
-=======
-    if(people.size != 0){
-        people = people.toString().replace(/,/g, ' & ');
-        if(type == "given"){
-            msg.channel.send("The following user(s) " + people + " have been given the role of " + roleName + ".");
-        }else if(type == "removed"){
-            msg.channel.send("The following user(s) " + people + " no longer have the role " + roleName + ".");
->>>>>>> 267d94d188ff21eeded3074b224b7d0e5abaaa06
         }
     }
 
