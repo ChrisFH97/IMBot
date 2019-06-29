@@ -14,59 +14,77 @@ module.exports = {
     listen: function (msg, client, configF) {
         configFile = configF;
         var arr = (intents.intents);
+        var count = 0;
         arr.forEach(function (intent) {
             var word = intent.Word;
             if (msg.content.toLowerCase().includes(word)) {
-                switch (word) {
-                    case "ban":
-                        if(hasPermission(msg.member,"BAN_MEMBERS")){
-                            banUser(word, msg, client);
-                        }
-                        break;
-
-                    case "kick":
-                        if(hasPermission(msg.member,"KICK_MEMBERS")){
-                            kickUser(word, msg, client);
-                        }
-                        break;
-
-                    case "timeout":
-                    
-                        if(hasPermission(msg.member,"MANAGE_MESSAGES")){
-                            timeoutUser(word, msg, client);
-                        }
-                        break;
-
-                    case "enable" || "activate":
-                        if(hasPermission(msg.member,"ADMINISTRATOR")){
-                            var type = true;
-                            featureToggle(msg, type);
-                        }
-                        break;
-
-                    case "disable" || "deactivate":
-                        
-                        if(hasPermission(msg.member,"ADMINISTRATOR")){
-                            var type = false;
-                            featureToggle(msg, type);
-                        }
-                        break;
-
-                    case "turn":
-                        if(hasPermission(msg.member,"ADMINISTRATOR")){
-                            featureToggle(msg, null);
-                        }
-                        break;
-
-                    case "purge":
-                        if(hasPermission(msg.member,"MANAGE_MESSAGES")){
-                            purgeChannel(msg, client);
-                            
-                        }
-                        break;
-                }
+                count++;
             }
         });
+
+        if(count > 1){
+            msg.channel.send(msg.author + ", Please only use single intent per message.")
+        }else if(count == 1){
+            arr.forEach(function (intent) {
+                var word = intent.Word;
+                if (msg.content.toLowerCase().includes(word)) {
+                    switch (word) {
+                        case "ban":
+                            if(hasPermission(msg.member,"BAN_MEMBERS")){
+                                banUser(word, msg, client);
+                            }
+                            break;
+    
+                        case "kick":
+                            if(hasPermission(msg.member,"KICK_MEMBERS")){
+                                kickUser(word, msg, client);
+                            }
+                            break;
+    
+                        case "timeout":
+                        
+                            if(hasPermission(msg.member,"MANAGE_MESSAGES")){
+                                timeoutUser(word, msg, client);
+                            }
+                            break;
+    
+                        case "enable" || "activate":
+                            if(hasPermission(msg.member,"ADMINISTRATOR")){
+                                var type = true;
+                                featureToggle(msg, type);
+                            }
+                            break;
+    
+                        case "disable" || "deactivate":
+                            
+                            if(hasPermission(msg.member,"ADMINISTRATOR")){
+                                var type = false;
+                                featureToggle(msg, type);
+                            }
+                            break;
+    
+                        case "turn":
+                            if(hasPermission(msg.member,"ADMINISTRATOR")){
+                                featureToggle(msg, null);
+                            }
+                            break;
+    
+                        case "purge":
+                            if(hasPermission(msg.member,"MANAGE_MESSAGES")){
+                                purgeChannel(msg, client);
+                            }
+                            break;
+
+                        case "role":
+                            if(hasPermission(msg.member,"MANAGE_ROLES")){
+                                roleAlteration(msg, client);
+                            }
+                            break;
+                    }
+                }
+            });
+        }
+
     },
     recordUserInfo: function (msg) {
         if (msg.attachments.size > 0) {
@@ -77,11 +95,8 @@ module.exports = {
             userinfoattachmentstack = [];
         }
         else {
-            userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt });
+            userinfostack.push({ name: msg.author.username, channel: msg.channel.id, id: msg.author.id, msg: msg.content, msgId: msg.id, createdAt: msg.createdAt });
         }
-        // TESTING ---------------
-        // console.log(userinfostack);
-        // TESTING ---------------
     },
     appendUserInfo: function () {
         try {
@@ -134,7 +149,6 @@ module.exports = {
             request(options, function (error, response, body) {
                 if (error) throw new Error(error);
                 var obj = JSON.parse(body);
-                console.log(obj.lang);
                 if (obj.lang != "en" && obj.lang != "") {
                     getTranslatedText(msg, (function (text) {
                         msg.channel.send(translateEmbed(msg, text));
@@ -156,39 +170,38 @@ module.exports = {
                 var obj = JSON.parse(body);
                 if (obj.result.classification == "not safe" || obj.result.classification == "propably not safe") {
                     nsfw = true;
-                    console.log("High chance of nudity")
                     callback(nsfw)
                 } else {
-                    console.log("Image is safe")
                     callback(nsfw)
                 }
             }
         });
+    },statSlowmode : function(){
+        statSlowmode();
     },
     userinfostack
 }
 
 function banUser(word, msg, client) {
 
-    var regexp = new RegExp(regex.templates.discordID, '');
-    var ids = msg.content.match(regexp);
+    var ids = msg.mentions.users; 
     var bans = [];
 
     if (ids != null) {
-        ids.forEach(function (id) {
-            if (id != "592783579998584868") {
-                client.fetchUser(id).then(user => {
-                    var member = msg.guild.members.get(id);
-                    bans.push(member.displayName);
-                    if (msg.content.includes("for")) {
-                        //    member.ban({ reason: msg.content.slice(msg.content.indexOf("for"), msg.content.length)}).then(() => console.log(`Banned ${member.displayName}`)).catch(console.error);
-                    } else {
-                        //    member.ban().then(() => console.log(`Banned ${member.displayName}`)).catch(console.error);
-                    }
-                    member.send("You have been banned from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "");
-                });
-            }
+
+        ids.forEach(function(user){
+            if (user.id != "592783579998584868") {
+                var member = msg.guild.members.get(user.id);
+                bans.push(member.toString());
+                if (msg.content.includes("for")) {
+                    //    member.ban({ reason: msg.content.slice(msg.content.indexOf("for"), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                } else {
+                    //    member.ban().then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                }
+                member.send("You have been banned from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "");
+         }
         });
+
 
 
         setTimeout(function () {
@@ -208,30 +221,29 @@ function banUser(word, msg, client) {
 
 function kickUser(word, msg, client) {
 
-    var regexp = new RegExp(regex.templates.discordID, 'i');
-    var ids = msg.content.match(regexp);
+
+    var ids = msg.mentions.users; 
+
     var kicks = [];
 
     if (ids != null) {
 
-        ids.forEach(function (id) {
-            if (id != "592783579998584868") {
-                client.fetchUser(id).then(user => {
-                    var member = msg.guild.members.get(id);
-                    kicks.push(member.displayName);
-                    if (msg.content.includes("for")) {
-                        //    member.ban({ reason: msg.content.slice(msg.content.indexOf("for"), msg.content.length)}).then(() => console.log(`Banned ${member.displayName}`)).catch(console.error);
-                    } else {
-                        //    member.ban().then(() => console.log(`Banned ${member.displayName}`)).catch(console.error);
-                    }
+        ids.forEach(function(user){
+            if (user.id != "592783579998584868") {
 
-                    member.send("You have been kicked from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "");
+                var member = msg.guild.members.get(user.id);
+                kicks.push(member.toString());
+                if (msg.content.includes("for")) {
+                    //    member.ban({ reason: msg.content.slice(msg.content.indexOf("for"), msg.content.length)}).then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                } else {
+                    //    member.ban().then(() => console.log(`Banned ${member.toString()}`)).catch(console.error);
+                }
 
-                });
+                member.send("You have been kicked from **" + client.guilds.get(msg.guild.id).name + "** " + msg.content.slice(msg.content.indexOf("for"), msg.content.length) + "");
+
             }
-
-
         });
+
 
 
         setTimeout(function () {
@@ -257,16 +269,16 @@ function timeoutUser(word, msg, client) {
         seconds: []
     };
 
-    var timeRegs = regex.templates.time;
-    var regexp = new RegExp(regex.templates.discordID, 'i');
-    var ids = msg.content.match(regexp);
+    var ids = msg.mentions.users; 
+
     var timeouts = [];
 
     var end = "";
 
     if (ids != null) {
 
-
+        var timeRegs = regex.templates.time;
+        
         timeRegs.forEach(function (reg) {
             var regexp = new RegExp(reg, 'gi');
             var times = msg.content.toLowerCase().match(regexp);
@@ -286,21 +298,17 @@ function timeoutUser(word, msg, client) {
             }
         });
 
-
-
-        ids.forEach(function (id) {
-            if (id != "592783579998584868") {
-                if(isTimedout(id) == false){
-                    end = calculateTimeoutEnd(id, timer);
+        ids.forEach(function(user){
+            if (user.id != "592783579998584868") {
+                if(isTimedout(user.id) == false){
+                    end = calculateTimeoutEnd(user.id, timer);
                     if (end != 0) {
-                        var member = msg.guild.members.get(id);
-                        timeouts.push(member.displayName);
+                        var member = msg.guild.members.get(user.id);
+                        timeouts.push(member.toString());
                         member.send("You have been timed out from **" + client.guilds.get(msg.guild.id).name + "**, you will be able to chat again in **" + end + "**");
                     }
                 }
-
             }
-
         });
         if (end != 0) {
             timeouts = timeouts.toString().replace(/,/g, ' & ');
@@ -436,7 +444,7 @@ function translateEmbed(msg, translation) {
 }
 
 function featureToggle(msg, toggleType) {
-    console.log(toggleType);
+    
     var types = ["translation", "nsfw", "cooldown", "blacklisting"]
 
     if (msg.content.toLowerCase().includes(" off ")) {
@@ -455,7 +463,6 @@ function featureToggle(msg, toggleType) {
         types.forEach(function (type) {
             if (msg.content.toLowerCase().includes(type)) {
                 var state;
-                console.log(toggleType);
                 if(toggleType){
                      state = "Enabled.";
                 }else{
@@ -491,7 +498,6 @@ function featureToggle(msg, toggleType) {
         });
     }
 }
-
 
 function purgeChannel(msg, client) {
     if (msg.mentions.channels.size > 0) {
@@ -543,6 +549,43 @@ function hasPermission(member,permission){
     return member.hasPermission(permission) ? true : false;
 }
 
-function statSlowmode(){
+function roleAlteration(msg){
 
+    var people = [];
+    var type = "";
+    var roleName = "";
+
+    var userlist = msg.mentions.users; 
+    userlist.forEach(function(user){
+        if (user.id != "592783579998584868") {
+
+            var member = msg.guild.members.get(user.id);
+            people.push(member.toString());
+            var hasRole = false;
+            msg.guild.roles.find(role => {
+                if(hasRole == false && msg.content.toLowerCase().includes(role.name.toLowerCase())){
+                    hasRole = true;
+                    roleName = role.name;
+                    if(msg.content.toLowerCase().includes("give") || msg.content.toLowerCase().includes("assign") || msg.content.toLowerCase().includes("allocate")){
+                        type = "given"
+                        member.addRole(role).catch(console.error);
+                    }else if(msg.content.toLowerCase().includes("remove") || msg.content.toLowerCase().includes("take")){
+                        type = "removed"
+                        member.removeRole(role).catch(console.error);
+                    }
+                }
+            } );
+        }
+    });
+
+
+    if(people.size != 0){
+        people = people.toString().replace(/,/g, ' & ');
+        if(type == "given"){
+            msg.channel.send("The following user(s) " + people + " have been given the role of " + roleName + ".");
+        }else if(type == "removed"){
+            msg.channel.send("The following user(s) " + people + " no longer have the role " + roleName + ".");
+        }
+        
+    }
 }
