@@ -17,25 +17,55 @@ Both solutions will equally work, as the intent-system was primarily developed t
 **IMBot** comes with many extra *configurable* options, including the ability to record userdata (acquired through messages), NSFW-filtering, language translation and much more! As development continues, more features will be added for the overall user experience.
 # Features w/ Examples
 Since we do not have our Wiki page up with all documentation, we are displaying our feature list here and examples on how to use them:
-### Ban Users
+## Ban Users
+|Required Permission|
+|:-----------------:|
+|BAN_MEMBERS|
 ```
 IMBot please ban @Gisgar3#3047 for being disrespectful towards users
 ```
-### Kick Users
+## Kick Users
+|Required Permission|
+|:-----------------:|
+|KICK_MEMBERS|
 ```
 IMBot plzzzz kick @ChrisFH#1769 for beeeinggg a meanie
 ```
-### Timeout Users
+## Timeout Users
+|Required Permission|
+|:-----------------:|
+|MANAGE_MESSAGES|
 ```
 IMBot please timeout @ChrisFH#1769 for 20m
 ```
-### Auto-Translation
-**Can be enabled and will automatically translate them.**
+## Auto-Translation
+**Can be enabled and will automatically translate them.**  
+
+|Required Permission|
+|:-----------------:|
+|ADMINISTRATOR|
 ```
 IMBot enable translation
 me gusta beber la leche
 
 // Will return a RichEmbed() with translation information
 ```
-### Intent-System
+## Intent-System
 **Bot is capable of comprehending numerous ways of speech to function as intended**
+## Purge Channels/Users
+**Can be used to remove mass amounts of messages from channels or users.**  
+
+|Required Permission|
+|:-----------------:|
+|ADMINISTRATOR|
+```
+IMBot purge #general
+IMBot purge @Gisgar3#3047
+```
+## Add/Remove Roles from Users
+|Required Permission|
+|:-----------------:|
+|MANAGE_ROLES|
+```
+IMBot give @ChrisFH#1769 the Admin role
+```
