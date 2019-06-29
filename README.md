@@ -1,5 +1,5 @@
 <img src="./assets/IMBOTLOGO1-WITHDESC.png"></img>
-
+**Currently Running on a Raspberry pi so NSFW Filter Detection and Translation may be slow**
 <p align="center"><a href="https://discordapp.com/api/oauth2/authorize?client_id=592783579998584868&permissions=8&scope=bot"><img style="width:480px;" src="./assets/IMBOTINVITE1.png"></img></a></p>
 
 **IMBot** is a Discord server moderation bot that functions by detecting the intentions of a user using the bot. The developed intent-system is capable of comprehending commands in many different ways.
