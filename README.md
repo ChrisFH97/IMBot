@@ -31,6 +31,10 @@ IMBot please ban @Gisgar3#3047 for being disrespectful towards users
 ```
 IMBot please unban Gisgar3
 ```
+or 
+```
+IMBot unban the user known as Gisgar3
+```
 ## Kick Users
 |Required Permission|
 |:-----------------:|
@@ -38,12 +42,20 @@ IMBot please unban Gisgar3
 ```
 IMBot plzzzz kick @ChrisFH#1769 for beeeinggg a meanie
 ```
+or
+```
+IMBot kick @ChrisFH#1769 because he is being mean
+```
 ## Timeout Users
 |Required Permission|
 |:-----------------:|
 |MANAGE_MESSAGES|
 ```
 IMBot please timeout @ChrisFH#1769 for 20m
+```
+or 
+```
+IMBot timeout @ChrisFH#1769 for 5d 6hours 20mins 30seconds
 ```
 ## Auto-Translation
 **Can be enabled and will automatically translate them.**  
@@ -57,6 +69,17 @@ me gusta beber la leche
 
 // Will return a RichEmbed() with translation information
 ```
+## Language selection
+|Required Permission|
+|:-----------------:|
+|BAN_MEMBERS|
+```
+IMBot set the servers language to english
+```
+or
+```
+IMBot set language to french
+```
 ## Purge Channels/Users
 **Can be used to remove mass amounts of messages from channels or users.**  
 
@@ -67,6 +90,11 @@ me gusta beber la leche
 IMBot purge #general
 IMBot purge @Gisgar3#3047
 ```
+or 
+```
+IMBot Can you purge messages from  #general
+IMBot Please purge all messages from @Gisgar3#3047
+```
 ## Add/Remove Roles from Users
 |Required Permission|
 |:-----------------:|
@@ -74,6 +102,9 @@ IMBot purge @Gisgar3#3047
 ```
 IMBot give @ChrisFH#1769 the Admin role
 ```
-
+or 
+```
+IMBot Can you assign @ChrisFH#1769 the Admin role please
+```
 ## Intent-System
 **Bot is capable of comprehending numerous ways of speech to function as intended**
