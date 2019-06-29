@@ -295,7 +295,7 @@ function timeoutUser(word, msg, client) {
                     if (end != 0) {
                         var member = msg.guild.members.get(id);
                         timeouts.push(member.displayName);
-                        member.send("You have been timed out from **" + client.guilds.get(msg.guild.id).name + "**, you will be able to chat again in **" + end + "**");
+                        member.send("You have been timed out from **" + client.guilds.get(msg.guild.id).name + "**. You will be able to chat again in **" + end + "**");
                     }
                 }
 
