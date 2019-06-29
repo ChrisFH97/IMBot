@@ -39,14 +39,16 @@ module.exports = {
 
                     case "enable" || "activate":
                         if(hasPermission(msg.member,"ADMINISTRATOR")){
-                            featureToggle(msg, true);
+                            var type = true;
+                            featureToggle(msg, type);
                         }
                         break;
 
                     case "disable" || "deactivate":
                         
                         if(hasPermission(msg.member,"ADMINISTRATOR")){
-                            featureToggle(msg, false);
+                            var type = false;
+                            featureToggle(msg, type);
                         }
                         break;
 
@@ -58,7 +60,8 @@ module.exports = {
 
                     case "purge":
                         if(hasPermission(msg.member,"MANAGE_MESSAGES")){
-                            purgeChannel(msg, client)
+                            purgeChannel(msg, client);
+                            
                         }
                         break;
                 }
@@ -70,7 +73,7 @@ module.exports = {
             for (const value of msg.attachments.array().values()) {
                 userinfoattachmentstack.push({ attachments: [{ filename: value.filename, url: value.url }] });
             }
-            userinfostack.push({ name: msg.author.username, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
+            userinfostack.push({ name: msg.author.username,channel: msg.channel.id, id: msg.author.id, msg: msg.content, msgattachments: userinfoattachmentstack, msgId: msg.id, createdAt: msg.createdAt });
             userinfoattachmentstack = [];
         }
         else {
@@ -433,15 +436,17 @@ function translateEmbed(msg, translation) {
 }
 
 function featureToggle(msg, toggleType) {
-
+    console.log(toggleType);
     var types = ["translation", "nsfw", "cooldown", "blacklisting"]
 
-    if (msg.content.toLowerCase().includes("off")) {
+    if (msg.content.toLowerCase().includes(" off ")) {
         toggleType = false;
-    } else if (msg.content.toLowerCase().includes("on")) {
+    } else if (msg.content.toLowerCase().includes(" on ")) {
         toggleType = true;
-    } else if (msg.content.toLowerCase().includes("off") && msg.content.toLowerCase().includes("on")) {
+    } else if (msg.content.toLowerCase().includes(" off ") && msg.content.toLowerCase().includes(" on ")) {
         toggleType = null;
+    }else{
+        toggleType = toggleType;
     }
 
     if (toggleType == null) {
@@ -449,72 +454,14 @@ function featureToggle(msg, toggleType) {
     } else {
         types.forEach(function (type) {
             if (msg.content.toLowerCase().includes(type)) {
-                var state = toggleType = true ? "Enabled." : "Disabled.";
-                switch (type) {
-                    case "translation":
-                        configFile["Translation"] = toggleType;
-                        msg.channel.send(msg.author + ",  the __Auto Translation__ feature has been " + state);
-                        break;
-
-                    case "nsfw":
-                        configFile["NSFW Filter"] = toggleType;
-                        msg.channel.send(msg.author + ",  the __NSFW Filter__ feature has been " + state);
-                        break;
-
-                    case "cooldown":
-                        configFile["Statistical Slow-Mode"] = toggleType;
-                        msg.channel.send(msg.author + ",  the __Statistical Slow-Mode__ feature has been " + state);
-                        break;
+                var state;
+                console.log(toggleType);
+                if(toggleType){
+                     state = "Enabled";
+                }else{
+                     state = "Disabled";
                 }
-            }
-        });
-    }
-}
 
-function getTranslatedText(msg, callback) {
-    var translated;
-
-    if (msg.content == "" && msg.attachments.size > 0) {
-        return;
-    }
-    else {
-        var options = {
-            method: 'GET',
-            url: 'https://translate.yandex.net/api/v1.5/tr.json/translate',
-            qs:
-            {
-                key: 'trnsl.1.1.20190626T023402Z.aec9c733ab816267.ead2c2e94b6b8e1dfe3057775ce1613d21a92e38',
-                lang: config.lang,
-                text: msg.content
-            }
-        };
-
-        request(options, function (error, response, body) {
-            if (error) throw new Error(error);
-            var obj = JSON.parse(body);
-            callback(obj.text[0]);
-        });
-    }
-}
-
-function featureToggle(msg, toggleType) {
-
-    var types = ["translation", "nsfw", "cooldown", "blacklisting"]
-
-    if (msg.content.toLowerCase().includes("off")) {
-        toggleType = false;
-    } else if (msg.content.toLowerCase().includes("on")) {
-        toggleType = true;
-    } else if (msg.content.toLowerCase().includes("off") && msg.content.toLowerCase().includes("on")) {
-        toggleType = null;
-    }
-
-    if (toggleType == null) {
-        msg.channel.send(msg.author + ", It appears you are trying to enabled and disable a feature at the same time ");
-    } else {
-        types.forEach(function (type) {
-            if (msg.content.toLowerCase().includes(type)) {
-                var state = toggleType ? "Enabled." : "Disabled.";
                 switch (type) {
                     case "translation":
                         configFile["Translation"] = toggleType;
@@ -527,7 +474,7 @@ function featureToggle(msg, toggleType) {
                         break;
 
                     case "cooldown":
-                        configFile["Statistical Slow-Mode"] = toggleType;
+                        configFile["Statistical Slow-mode"] = toggleType;
                         msg.channel.send(msg.author + ",  the __Statistical Slow-Mode__ feature has been " + state);
                         break;
 
@@ -544,6 +491,7 @@ function featureToggle(msg, toggleType) {
         });
     }
 }
+
 
 function purgeChannel(msg, client) {
     if (msg.mentions.channels.size > 0) {
@@ -572,6 +520,9 @@ function purgeChannel(msg, client) {
             }));
         }
     }
+
+    msg.channel.send(msg.author + ", Now purging");
+
 }
 
 function isTimedout(id){
@@ -590,4 +541,8 @@ function isTimedout(id){
 
 function hasPermission(member,permission){
     return member.hasPermission(permission) ? true : false;
+}
+
+function statSlowmode(){
+
 }
