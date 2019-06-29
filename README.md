@@ -1,5 +1,7 @@
 <img src="./assets/IMBOTLOGO1-WITHDESC.png"></img>
--------------------------------------------------
+
+<p align="center"><a href="https://discordapp.com/api/oauth2/authorize?client_id=592783579998584868&permissions=8&scope=bot"><img src="./assets/IMBOTINVITE1.png"></img></a></p>
+
 **IMBot** is a Discord server moderation bot that functions by detecting the intentions of a user using the bot. The developed intent-system is capable of comprehending commands in many different ways.
 # Why rely on intention?
 With an intent-system, users are not required to remember any specific syntax to allow the bot to function (**i.e.** a command prefix). For example, if a moderator on a server wants to ban a user, they can type:  
