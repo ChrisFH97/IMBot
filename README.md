@@ -1,5 +1,5 @@
 <img src="./assets/IMBOTLOGO1-WITHDESC.png"></img>
-**Currently Running on a Raspberry pi so NSFW Filter Detection and Translation may be slow**
+**Bot is temporarily running on a Raspberry Pi board; NSFW Filtering and Translation may function slowly.**
 <p align="center"><a href="https://discordapp.com/api/oauth2/authorize?client_id=592783579998584868&permissions=8&scope=bot"><img style="width:480px;" src="./assets/IMBOTINVITE1.png"></img></a></p>
 
 **IMBot** is a Discord server moderation bot that functions by detecting the intentions of a user using the bot. The developed intent-system is capable of comprehending commands in many different ways.
@@ -29,11 +29,11 @@ IMBot please ban @Gisgar3#3047 for being disrespectful towards users
 |:-----------------:|
 |BAN_MEMBERS|
 ```
-IMBot please unban Gisgar3
+IMBot please unban Gisgar3#3047
 ```
 or 
 ```
-IMBot unban the user known as Gisgar3
+IMBot unban the user known as Gisgar3#3047
 ```
 ## Kick Users
 |Required Permission|
@@ -58,7 +58,7 @@ or
 IMBot timeout @ChrisFH#1769 for 5d 6hours 20mins 30seconds
 ```
 ## Auto-Translation
-**Can be enabled and will automatically translate them.**  
+**Can be enabled and will automatically translate messages.**  
 
 |Required Permission|
 |:-----------------:|
@@ -69,7 +69,7 @@ me gusta beber la leche
 
 // Will return a RichEmbed() with translation information
 ```
-## Language selection
+## Language Selection
 |Required Permission|
 |:-----------------:|
 |BAN_MEMBERS|
@@ -92,7 +92,7 @@ IMBot purge @Gisgar3#3047
 ```
 or 
 ```
-IMBot Can you purge messages from  #general
+IMBot Can you purge messages from #general
 IMBot Please purge all messages from @Gisgar3#3047
 ```
 ## Add/Remove Roles from Users
