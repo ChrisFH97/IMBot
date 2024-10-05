@@ -10,7 +10,7 @@ IMBot please ban ChrisFH#1769 for staff disrespect
 ```
 or
 ```
-IMBot can u plzzzz ban @Gisgar3#3047 for being a poopoo hed
+IMBot can u plzzzz ban @Gisgar3#3047 for being a pain
 ```
 Both solutions will equally work, as the intent-system was primarily developed to understand numerous forms of speech.
 # What else can IMBot do?
